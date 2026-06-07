@@ -1,0 +1,56 @@
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "Agent(*)",
+      "Skill(*)",
+      "mcp__*"
+    ],
+    "ask": [
+      "Bash(sudo rm:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf /bin:*)",
+      "Bash(rm -rf /boot:*)",
+      "Bash(rm -rf /etc:*)",
+      "Bash(rm -rf /home)",
+      "Bash(rm -rf /home/)",
+      "Bash(rm -rf /lib:*)",
+      "Bash(rm -rf /opt:*)",
+      "Bash(rm -rf /sbin:*)",
+      "Bash(rm -rf /srv:*)",
+      "Bash(rm -rf /sys:*)",
+      "Bash(rm -rf /usr:*)",
+      "Bash(rm -rf /var:*)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf ~/)",
+      "Bash(rm -rf ~/*)",
+      "Bash(rm -rf $HOME:*)",
+      "Bash(rm -fr /)",
+      "Bash(rm -fr /*)",
+      "Bash(rm -fr ~)",
+      "Bash(rm -fr ~/*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__blender__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ss -tlnp 2>/dev/null | grep -q 9876 || (nohup \"${BLENDER:-./blender-4.2.1-linux-x64/blender}\" --background --python ./scripts/start_blender_mcp.py > /tmp/blender_mcp_server.log 2>&1 & sleep 3)"
+          }
+        ]
+      }
+    ]
+  }
+}

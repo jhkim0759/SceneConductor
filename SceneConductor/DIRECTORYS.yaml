@@ -1,0 +1,70 @@
+# SceneConductor — canonical directory registry
+#
+# Single source of truth for machine-specific paths. Skills and scripts
+# read from here so that moving the project to a different machine only
+# requires editing this one file.
+#
+# Convention:
+#   - paths beginning with "./" are RELATIVE to the SceneConductor repo root
+#   - paths beginning with "/" are ABSOLUTE host paths
+#   - conda envs are stored by **name only** (callers invoke with
+#     `conda run -n <name> python ...`)
+#
+# Read from Python (helper pattern used across the skill scripts):
+#   import yaml
+#   from pathlib import Path
+#   REPO_ROOT = Path(__file__).resolve().parents[N]   # adjust N per file depth
+#   DIRS = yaml.safe_load((REPO_ROOT / "DIRECTORYS.yaml").read_text())
+#
+# Read from Bash:
+#   DIRS_YAML="<repo>/DIRECTORYS.yaml"
+#   BLENDER=$(python3 -c "import yaml,sys; d=yaml.safe_load(open(sys.argv[1])); print(d['blender_bin'])" "$DIRS_YAML")
+
+# ──────────────────────────────────────────────────────────────────────────
+# Binaries (relative to repo root — vendored in this project)
+#
+# Scripts resolve in this order:
+#   1. $BLENDER environment variable (overrides everything)
+#   2. blender_bin_<os> entry matching the current platform, if present
+#   3. blender_bin (default fallback)
+# ──────────────────────────────────────────────────────────────────────────
+blender_bin: ./blender-4.2.1-linux-x64/blender
+blender_bin_linux: ./blender-4.2.1-linux-x64/blender
+blender_bin_windows: C:/Program Files/Blender Foundation/Blender 4.4/blender.exe
+blender_bin_macos: /Applications/Blender.app/Contents/MacOS/Blender
+
+# ──────────────────────────────────────────────────────────────────────────
+# Project-local data (relative to repo root)
+# ──────────────────────────────────────────────────────────────────────────
+checkpoints_grounded_sam: ./checkpoints/grounded-sam
+checkpoints_galp: ./checkpoints/galp               # submodules/GALP/checkpoints → symlink here
+checkpoints_qwen_vl: ./checkpoints/qwen/Qwen3.5-27B
+
+# ──────────────────────────────────────────────────────────────────────────
+# External research repos (vendored as git submodules under ./submodules/)
+# ──────────────────────────────────────────────────────────────────────────
+galp_repo: ./submodules/GALP
+sam3d_repo: ./submodules/SAM3D
+
+# ──────────────────────────────────────────────────────────────────────────
+# Conda environments (names only — invoke via `conda run -n <name> python ...`)
+# ──────────────────────────────────────────────────────────────────────────
+conda_envs:
+  sceneconductor: sceneconductor    # default for stdlib + Blender drivers
+  galp:           scenegen          # GALP inference (needs torch + pytorch3d)
+  grounded-sam:   grounded-sam      # GroundedSAM inference
+  sam3d-objects:  sam3d-objects     # SAM3D textured GLB
+  qwen-vl:        qwen-vl           # Qwen3.5-VL extract_object_state.py
+                                    # Physical prefix can live off /home
+                                    # (env is ~10 GB; /home is often tight), e.g.
+                                    # /path/to/large/disk/sceneconductor_envs/qwen-vl
+                                    # Discoverable as a named env via
+                                    # `conda config --append envs_dirs /path/to/large/disk/sceneconductor_envs`
+
+# ──────────────────────────────────────────────────────────────────────────
+# Qwen-VL (used by Stage 1 extract_object_state.py and
+# /scene-analyze-prepare). Weights are vendored at `checkpoints_qwen_vl`
+# (see above). Pass that path as `--model` to the extractors, or rely on
+# the HF id `Qwen/Qwen3.5-27B` if you prefer the default HuggingFace cache.
+# ──────────────────────────────────────────────────────────────────────────
+qwen_vl_model_id: Qwen/Qwen3.5-27B

@@ -1,0 +1,669 @@
+# scene_norms.yaml
+# Automated scene evaluator norms — all distances in meters (m), heights in meters,
+# angles in degrees, lux in lux, color temp in Kelvin.
+# Tolerance field means "acceptable deviation from typical" (soft band).
+# hard_min / hard_max = code/standard absolute limits; null = not specified.
+#
+# Lifted from research notes on indoor scene norms.
+# Sources cited per entry. Used by scene-diagnoser (P0 hard-violation check)
+# and Realism-Critic prompt (soft-band recommendations).
+
+# ─────────────────────────────────────────────
+# 1. DESK + CHAIR
+# ─────────────────────────────────────────────
+desk_chair:
+  seat_height_m:
+    min: 0.38
+    typical: 0.44
+    max: 0.54
+    hard_min: 0.36
+    hard_max: null
+    tolerance: 0.03
+    source: "ANSI/HFES 100-2007 §5"
+
+  desk_height_m:
+    min: 0.63
+    typical: 0.72
+    max: 0.80
+    hard_min: 0.63
+    hard_max: null
+    tolerance: 0.02
+    source: "ANSI/HFES 100-2007 §5; Neufert Architects' Data 4th ed."
+
+  desk_minus_seat_delta_m:
+    min: 0.22
+    typical: 0.27
+    max: 0.32
+    hard_min: null
+    hard_max: null
+    tolerance: 0.03
+    source: "ANSI/HFES 100-2007; general ergonomics"
+
+  knee_clearance_floor_to_underside_m:
+    min: 0.64
+    typical: 0.68
+    max: null
+    hard_min: 0.64
+    hard_max: null
+    tolerance: 0.03
+    source: "ANSI/HFES 100-2007 §5 (knee clearance)"
+
+  thigh_clearance_seat_to_underside_m:
+    min: 0.16
+    typical: 0.20
+    max: null
+    hard_min: 0.16
+    hard_max: null
+    tolerance: 0.02
+    source: "ANSI/HFES 100-2007 §5"
+
+  leg_depth_clearance_m:
+    min: 0.46
+    typical: 0.55
+    max: null
+    hard_min: 0.46
+    hard_max: null
+    tolerance: 0.05
+    source: "ANSI/HFES 100-2007 §5"
+
+  tucked_distance_chair_front_to_desk_edge_m:
+    # negative = chair front edge is behind (inside) desk edge
+    min: -0.05
+    typical: 0.00
+    max: 0.05
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "General ergonomics practice"
+
+  in_use_distance_chair_front_to_desk_edge_m:
+    min: 0.15
+    typical: 0.20
+    max: 0.30
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "General ergonomics practice; Neufert"
+
+  chair_yaw_vs_desk_normal_deg:
+    min: -10.0
+    typical: 0.0
+    max: 10.0
+    hard_min: null
+    hard_max: null
+    tolerance: 10.0
+    source: "Ergonomic practice (chair should face desk)"
+
+# ─────────────────────────────────────────────
+# 2. DINING TABLE + CHAIRS
+# ─────────────────────────────────────────────
+dining_table_chair:
+  table_height_m:
+    min: 0.72
+    typical: 0.75
+    max: 0.78
+    hard_min: null
+    hard_max: null
+    tolerance: 0.03
+    source: "Neufert Architects' Data; Ventura Interiors guide"
+
+  chair_seat_height_m:
+    min: 0.43
+    typical: 0.45
+    max: 0.48
+    hard_min: null
+    hard_max: null
+    tolerance: 0.03
+    source: "Ventura Interiors; First in Architecture"
+
+  table_minus_seat_delta_m:
+    min: 0.27
+    typical: 0.30
+    max: 0.32
+    hard_min: 0.27
+    hard_max: null
+    tolerance: 0.02
+    source: "Neufert; general dining ergonomics"
+
+  chair_front_to_table_edge_seated_m:
+    min: 0.25
+    typical: 0.30
+    max: 0.35
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Ventura Interiors dining ergonomics"
+
+  table_edge_per_person_m:
+    min: 0.55
+    typical: 0.60
+    max: 0.70
+    hard_min: 0.55
+    hard_max: null
+    tolerance: 0.05
+    source: "Neufert Architects' Data (60 cm per cover)"
+
+  table_depth_m:
+    min: 0.80
+    typical: 0.85
+    max: 1.00
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Neufert; First in Architecture"
+
+  chair_center_to_center_spacing_m:
+    min: 0.55
+    typical: 0.65
+    max: 0.75
+    hard_min: 0.55
+    hard_max: null
+    tolerance: 0.05
+    source: "Neufert (60 cm per cover)"
+
+  walkway_behind_seated_diner_m:
+    min: 0.75
+    typical: 1.00
+    max: null
+    hard_min: 0.75
+    hard_max: null
+    tolerance: 0.10
+    source: "Neufert Architects' Data (75 cm pass-by; 100 cm walk+serve)"
+
+  apron_to_floor_clearance_m:
+    min: 0.20
+    typical: 0.25
+    max: null
+    hard_min: 0.20
+    hard_max: null
+    tolerance: 0.03
+    source: "Ventura Interiors (8–10 in apron clearance)"
+
+# ─────────────────────────────────────────────
+# 3. BED + NIGHTSTAND
+# ─────────────────────────────────────────────
+bed_nightstand:
+  mattress_top_from_floor_m:
+    min: 0.45
+    typical: 0.60
+    max: 0.75
+    hard_min: null
+    hard_max: null
+    tolerance: 0.10
+    source: "Mattress Nut guide; general market range"
+
+  nightstand_height_m:
+    min: 0.55
+    typical: 0.65
+    max: 0.75
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Froy.com; Mattress Nut nightstand guide"
+
+  nightstand_vs_mattress_top_delta_m:
+    # negative = nightstand lower than mattress top
+    min: -0.10
+    typical: 0.00
+    max: 0.10
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Froy.com (within 5 cm ideal; ±10 cm acceptable)"
+
+  gap_bed_side_to_nightstand_m:
+    min: 0.00
+    typical: 0.02
+    max: 0.05
+    hard_min: null
+    hard_max: null
+    tolerance: 0.03
+    source: "Interior design convention (nightstand adjacent to bed)"
+
+  bedside_lamp_total_height_m:
+    min: 0.55
+    typical: 0.65
+    max: 0.70
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Lightopia bedside lamp guide (24–27 in)"
+
+# ─────────────────────────────────────────────
+# 4. SOFA + COFFEE TABLE
+# ─────────────────────────────────────────────
+sofa_coffee_table:
+  sofa_seat_height_m:
+    min: 0.40
+    typical: 0.45
+    max: 0.50
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "General furniture standards; First in Architecture"
+
+  coffee_table_height_m:
+    min: 0.38
+    typical: 0.43
+    max: 0.48
+    hard_min: null
+    hard_max: null
+    tolerance: 0.03
+    source: "NEPA Furniture; Apartment Therapy (16–18 in)"
+
+  coffee_table_vs_sofa_seat_delta_m:
+    # negative = table lower than sofa seat (canonical)
+    min: -0.05
+    typical: -0.02
+    max: 0.00
+    hard_min: null
+    hard_max: null
+    tolerance: 0.03
+    source: "NEPA Furniture guide"
+
+  sofa_front_to_coffee_table_near_edge_m:
+    min: 0.35
+    typical: 0.40
+    max: 0.50
+    hard_min: 0.30
+    hard_max: null
+    tolerance: 0.05
+    source: "Apartment Therapy (14–18 in); belleze.com"
+
+  coffee_table_far_edge_to_tv_wall_m:
+    min: 0.90
+    typical: 1.20
+    max: 1.80
+    hard_min: 0.90
+    hard_max: null
+    tolerance: 0.20
+    source: "Interior design convention; Kati Curtis Design spacing guide"
+
+  walkway_around_seating_m:
+    min: 0.60
+    typical: 0.90
+    max: null
+    hard_min: 0.60
+    hard_max: null
+    tolerance: 0.15
+    source: "NEPA Furniture (30–36 in); Kati Curtis Design"
+
+  rug_extension_beyond_table_sofa_side_m:
+    min: 0.30
+    typical: 0.45
+    max: null
+    hard_min: null
+    hard_max: null
+    tolerance: 0.10
+    source: "King Living rug placement guide"
+
+  rug_front_sofa_legs_on_rug:
+    canonical: true
+    note: "Front legs on rug anchors the seating group; rear legs off rug is acceptable"
+    source: "Emily Henderson / King Living rug rules"
+
+# ─────────────────────────────────────────────
+# 5. DOORS AND CIRCULATION
+# ─────────────────────────────────────────────
+doors_circulation:
+  min_walkway_width_m:
+    min: 0.91
+    typical: 1.00
+    max: null
+    hard_min: 0.91
+    hard_max: null
+    tolerance: 0.05
+    source: "ADA §403.5.1 (36 in accessible route)"
+
+  pinch_point_min_width_m:
+    min: 0.81
+    typical: null
+    max: null
+    hard_min: 0.81
+    hard_max: null
+    tolerance: 0.0
+    note: "Only allowed for max 61 cm length segments"
+    source: "ADA §403.5.3"
+
+  door_swing_radius_m:
+    min: 0.70
+    typical: 0.80
+    max: 0.90
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Standard door widths (28–36 in); ADA door guidance"
+
+  latch_side_clearance_pull_m:
+    min: 0.45
+    typical: 0.50
+    max: null
+    hard_min: 0.45
+    hard_max: null
+    tolerance: 0.05
+    source: "ADA §404.2.4 (18 in latch-side, pull approach)"
+
+  latch_side_clearance_push_m:
+    min: 0.30
+    typical: 0.35
+    max: null
+    hard_min: 0.30
+    hard_max: null
+    tolerance: 0.03
+    source: "ADA §404.2.4 (12 in push approach)"
+
+  approach_depth_pull_m:
+    min: 1.50
+    typical: 1.65
+    max: null
+    hard_min: 1.50
+    hard_max: null
+    tolerance: 0.10
+    source: "ADA §404.2.4 (60 in perpendicular pull)"
+
+  approach_depth_push_m:
+    min: 1.20
+    typical: 1.30
+    max: null
+    hard_min: 1.20
+    hard_max: null
+    tolerance: 0.10
+    source: "ADA §404.2.4 (48 in perpendicular push)"
+
+  furniture_to_door_swing_buffer_m:
+    min: 0.10
+    typical: 0.15
+    max: null
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Design practice (door must clear furniture)"
+
+  bedroom_circulation_path_m:
+    min: 0.90
+    typical: 1.00
+    max: null
+    hard_min: null
+    hard_max: null
+    tolerance: 0.10
+    source: "Neufert; NKBA design guidelines"
+
+# ─────────────────────────────────────────────
+# 6. WALL-MOUNTED ITEMS
+# ─────────────────────────────────────────────
+wall_mounted:
+  tv_center_height_m:
+    min: 0.95
+    typical: 1.07
+    max: 1.20
+    hard_min: null
+    hard_max: null
+    tolerance: 0.10
+    source: "Vogels TV mount guide; Mount-It guide (seated eye level ~107 cm)"
+
+  tv_viewing_distance_multiplier:
+    min: 1.5
+    typical: 2.0
+    max: 2.5
+    hard_min: 1.2
+    hard_max: null
+    tolerance: 0.5
+    source: "SMPTE EG-18-1994; HomeTheaterReview"
+
+  tv_max_upward_tilt_deg:
+    min: null
+    typical: null
+    max: 35.0
+    hard_min: null
+    hard_max: 35.0
+    tolerance: 5.0
+    source: "SMPTE EG-18-1994"
+
+  picture_frame_center_height_m:
+    min: 1.40
+    typical: 1.45
+    max: 1.52
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Gallery/museum convention (57 in = 145 cm); ASID recommendation"
+
+  shelf_depth_books_m:
+    min: 0.20
+    typical: 0.28
+    max: 0.35
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Standard bookshelf dimensions; Neufert"
+
+  shelf_depth_display_m:
+    min: 0.10
+    typical: 0.20
+    max: 0.25
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Interior design convention"
+
+  floating_shelf_clearance_above_desk_m:
+    min: 0.40
+    typical: 0.50
+    max: null
+    hard_min: 0.40
+    hard_max: null
+    tolerance: 0.05
+    source: "Ergonomic practice (head/monitor clearance)"
+
+# ─────────────────────────────────────────────
+# 7. LIGHTING
+# ─────────────────────────────────────────────
+lighting:
+  wall_sconce_center_height_general_m:
+    min: 1.65
+    typical: 1.70
+    max: 1.83
+    hard_min: null
+    hard_max: null
+    tolerance: 0.08
+    source: "OneLuxe Lighting; Bees Lighting sconce guide (65–72 in)"
+
+  bedside_sconce_center_height_m:
+    min: 1.40
+    typical: 1.50
+    max: 1.60
+    hard_min: null
+    hard_max: null
+    tolerance: 0.10
+    source: "OneLuxe Lighting (55–60 in for reading sconces)"
+
+  vanity_sconce_center_height_m:
+    min: 1.52
+    typical: 1.63
+    max: 1.68
+    hard_min: null
+    hard_max: null
+    tolerance: 0.05
+    source: "Bees Lighting (60–66 in at eye level)"
+
+  hallway_sconce_center_height_m:
+    min: 1.52
+    typical: 1.65
+    max: null
+    hard_min: null
+    hard_max: null
+    tolerance: 0.08
+    source: "Bees Lighting (60–65 in hallway)"
+
+  hallway_sconce_spacing_m:
+    min: 2.40
+    typical: 3.00
+    max: null
+    hard_min: null
+    hard_max: null
+    tolerance: 0.30
+    source: "Bees Lighting (8 ft apart minimum)"
+
+  lux_living_room_general:
+    min: 100
+    typical: 200
+    max: 300
+    hard_min: null
+    hard_max: null
+    tolerance: 50
+    source: "IES Handbook residential (Archtoolbox summary 200–300 lux)"
+
+  lux_bedroom_general:
+    min: 50
+    typical: 200
+    max: 300
+    hard_min: null
+    hard_max: null
+    tolerance: 50
+    source: "IES Handbook residential (Archtoolbox 200–300 lux)"
+
+  lux_kitchen_task:
+    min: 300
+    typical: 500
+    max: 750
+    hard_min: null
+    hard_max: null
+    tolerance: 100
+    source: "IES Handbook (300–750 lux kitchen task)"
+
+  lux_office_task:
+    min: 300
+    typical: 500
+    max: 750
+    hard_min: null
+    hard_max: null
+    tolerance: 100
+    source: "IES Handbook (300–500 lux open office)"
+
+  lux_hallway:
+    min: 50
+    typical: 100
+    max: 150
+    hard_min: null
+    hard_max: null
+    tolerance: 30
+    source: "IES Handbook (50–100 lux corridor)"
+
+  color_temp_bedroom_living_K:
+    min: 2700
+    typical: 2800
+    max: 3000
+    hard_min: null
+    hard_max: null
+    tolerance: 150
+    source: "Lighting industry standard (warm white = sleep/relaxation zones)"
+
+  color_temp_kitchen_office_K:
+    min: 3500
+    typical: 4000
+    max: 4500
+    hard_min: null
+    hard_max: null
+    tolerance: 250
+    source: "Lighting industry standard (neutral white = task zones)"
+
+# ─────────────────────────────────────────────
+# 8. FURNITURE BOUNDING-BOX SCALE PRIORS (meters)
+# Format: [min, max] for each axis. Width = X, Depth = Y, Height = Z (Blender axes).
+# ─────────────────────────────────────────────
+furniture_scale_priors:
+  single_bed_m:
+    width: [0.90, 1.00]
+    depth: [1.90, 2.00]
+    height: [0.50, 0.70]
+    source: "First in Architecture metric data; Bassett Furniture"
+
+  double_bed_m:
+    width: [1.35, 1.45]
+    depth: [1.90, 2.00]
+    height: [0.50, 0.70]
+    source: "First in Architecture metric data"
+
+  queen_bed_m:
+    width: [1.50, 1.65]
+    depth: [2.00, 2.15]
+    height: [0.50, 0.75]
+    source: "Bassett Furniture; Nismaaya Decor"
+
+  king_bed_m:
+    width: [1.80, 2.00]
+    depth: [2.00, 2.15]
+    height: [0.55, 0.75]
+    source: "Bassett Furniture"
+
+  dining_chair_m:
+    width: [0.45, 0.55]
+    depth: [0.45, 0.55]
+    height: [0.80, 0.95]
+    source: "First in Architecture (seat 45×45 cm; total back height ~85–95 cm)"
+
+  office_chair_m:
+    width: [0.55, 0.70]
+    depth: [0.55, 0.70]
+    height: [0.85, 1.30]
+    source: "Eureka Ergonomic guide (adjustable height)"
+
+  sofa_2_seater_m:
+    width: [1.40, 1.65]
+    depth: [0.85, 1.00]
+    height: [0.80, 0.92]
+    source: "First in Architecture (150×95 cm nominal)"
+
+  sofa_3_seater_m:
+    width: [1.85, 2.30]
+    depth: [0.85, 1.00]
+    height: [0.80, 0.92]
+    source: "First in Architecture (210×95 cm nominal)"
+
+  coffee_table_m:
+    width: [0.90, 1.30]
+    depth: [0.45, 0.70]
+    height: [0.38, 0.50]
+    source: "First in Architecture (750×750 small; 1000×500 large)"
+
+  side_table_m:
+    width: [0.40, 0.60]
+    depth: [0.40, 0.60]
+    height: [0.55, 0.70]
+    source: "First in Architecture (bedside 450×450 cm)"
+
+  dining_table_4seat_m:
+    width: [1.20, 1.40]
+    depth: [0.75, 0.90]
+    height: [0.72, 0.78]
+    source: "First in Architecture (1350×750 mm for 4)"
+
+  dining_table_6seat_m:
+    width: [1.50, 1.80]
+    depth: [0.85, 1.00]
+    height: [0.72, 0.78]
+    source: "First in Architecture (1500×900 mm for 6)"
+
+  desk_m:
+    width: [1.20, 1.80]
+    depth: [0.60, 0.80]
+    height: [0.72, 0.80]
+    source: "First in Architecture (1500×750 mm nominal)"
+
+  wardrobe_2door_m:
+    width: [1.00, 1.50]
+    depth: [0.55, 0.65]
+    height: [1.80, 2.20]
+    source: "First in Architecture (1200×600 mm); Nismaaya"
+
+  refrigerator_m:
+    width: [0.70, 0.90]
+    depth: [0.65, 0.75]
+    height: [1.65, 1.85]
+    source: "LG UK fridge sizes; Whirlpool guide"
+
+  washing_machine_frontload_m:
+    width: [0.55, 0.65]
+    depth: [0.55, 0.65]
+    height: [0.82, 0.88]
+    source: "TCL washer guide; Coolblue dimensions"
