@@ -2,9 +2,16 @@
 
 <h4 align="center">
 
-[Jeonghwan Kim](https://jhkim0759.github.io)
+[Jeonghwan Kim](https://jhkim0759.github.io/)<sup>1</sup>,
+[Yushi Lan](https://nirvanalan.github.io/)<sup>2</sup>,
+[Yongwei Chen](https://cyw-3d.github.io/)<sup>1</sup>,
+[Hieu Trung Nguyen](https://hieu1999210.github.io/)<sup>3</sup>,
+[Chuanyu Pan](https://pptrick.github.io/)<sup>3</sup>,
+[Xingang Pan](https://xingangpan.github.io/)<sup>1</sup>
 
-S-Lab, Nanyang Technological University
+<sup>1</sup>Nanyang Technological University &nbsp;&middot;&nbsp;
+<sup>2</sup>University of Oxford &nbsp;&middot;&nbsp;
+<sup>3</sup>Meshy AI
 
 [![arXiv](https://img.shields.io/badge/arXiv-coming%20soon-b31b1b.svg?logo=arXiv)](#)
 [![Project Page](https://img.shields.io/badge/🏠-Project%20Page-blue.svg)](https://jhkim0759.github.io/projects/SceneConductor/)
@@ -249,7 +256,7 @@ If you find our work helpful, please consider citing:
 ```bibtex
 @inproceedings{sceneconductor2026,
   title     = {SceneConductor: 3D Scene Generation from Single Image with Multi-Agent Orchestration},
-  author    = {Jeonghwan Kim},
+  author    = {Jeonghwan Kim and Yushi Lan and Yongwei Chen and Hieu Trung Nguyen and Chuanyu Pan and Xingang Pan},
   booktitle = {Arxiv},
   year      = {2026}
 }
