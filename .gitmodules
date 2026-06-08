@@ -1,0 +1,12 @@
+[submodule "submodules/Grounded-SAM"]
+	path = submodules/Grounded-SAM
+	url = https://github.com/IDEA-Research/Grounded-Segment-Anything.git
+[submodule "submodules/SAM3D"]
+	path = submodules/SAM3D
+	url = https://github.com/facebookresearch/sam-3d-objects.git
+[submodule "submodules/Qwen3.6"]
+	path = submodules/Qwen3.6
+	url = https://github.com/QwenLM/Qwen3.6.git
+[submodule "submodules/GALP"]
+	path = submodules/GALP
+	url = https://github.com/jhkim0759/GALP.git
