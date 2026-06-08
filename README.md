@@ -30,149 +30,115 @@ The pipeline runs in three resumable stages, illustrated above:
 - **(b) Stage 2 — Environment Construction.** An Opus vision director designs a rectilinear floor plan, builds a separable Floor/Wall/Ceiling stage, runs a look-dev pass to match the photo, and renders 5 reference views.
 - **(c) Stage 3 — Scene Refinement.** A relation graph drives a heuristic + Opus planner pass (attach-to-floor/wall, align, remove); an Opus validator flags problem groups, each refined by a dedicated island-refiner agent before a final 5-view render.
 
-## Quickstart
+## 🚀 Quickstart
 
-1. Clone the repository.
+> **🧭 Where do I type this?** Two kinds of commands appear throughout this README:
+> - 💻 **Terminal** — run in your normal shell (e.g. `./setup.sh`, `git`, `conda`).
+> - 💬 **Claude Code prompt** — type *inside* the Claude Code CLI after you run `claude`. These are the `/slash-commands`.
 
-   ```bash
-   git clone --recursive https://github.com/example/SceneConductor.git SceneConductor
-   cd SceneConductor
-   ```
-
-2. If you cloned without `--recursive`, initialize the real submodules.
-
-   ```bash
-   git submodule update --init --recursive
-   ```
-
-   Note: `submodules/GALP` is vendored (committed as plain files) and does not require this step. `Grounded-SAM`, `SAM3D`, and `Qwen3.6` do.
-
-3. Download Blender 4.2 and extract it next to the repo (Linux x86_64):
-
-   ```bash
-   wget https://download.blender.org/release/Blender4.2/blender-4.2.1-linux-x64.tar.xz
-   tar -xf blender-4.2.1-linux-x64.tar.xz
-   ```
-
-   On macOS/Windows, install Blender 4.2 manually and update `blender_bin_macos` or `blender_bin_windows` in `DIRECTORYS.yaml`.
-
-4. Create the five conda environments (see the **Environment Setup** section for details).
-
-   ```bash
-   conda create -n sceneconductor python=3.11 -y
-   conda activate sceneconductor
-   pip install pyyaml numpy pillow trimesh
-   # Then create scenegen / grounded-sam / sam3d-objects / qwen-vl following each submodule README.
-   ```
-
-5. Download model checkpoints into `./checkpoints/` (see the **Model Checkpoints** section). Total ~21 GB.
-
-6. Sanity-check the Blender binary the pipeline will use.
-
-   ```bash
-   ./blender-4.2.1-linux-x64/blender --version
-   ```
-
-7. Run the full pipeline on a scene directory containing a single `image.png`.
-
-   ```bash
-   mkdir -p scenes/my_room
-   cp /path/to/photo.png scenes/my_room/image.png
-   # Inside Claude Code:
-   /scene-orchestration scenes/my_room
-   ```
-
-## Prerequisites
-
-- **OS:** Linux x86_64 (the vendored Blender path targets Linux; macOS/Windows are untested for the Stage 1 SAM3D/GALP GPU paths).
-- **GPU:** NVIDIA, CUDA 11.8+, ~30 GiB VRAM peak (SAM3D Stage 1 post-process is the bottleneck).
-- **Disk:** ~50 GB free (Blender ~4 GB + checkpoints ~21 GB + per-scene outputs).
-- **Claude Code CLI** — the pipeline is driven by slash commands. Install per https://github.com/anthropics/claude-code.
-- **conda / miniconda** — five environments are referenced via `conda run -n <name>`.
-- **Git LFS** is not required.
-
-## Environment Setup
-
-| Env name | Purpose | Where to follow detailed install |
-|---|---|---|
-| `sceneconductor` | Python 3.11, stdlib + Blender drivers (pyyaml, numpy, pillow, trimesh) | This README, step 4 |
-| `scenegen` | GALP layout prediction (torch + pytorch3d) | `submodules/GALP/README.md` |
-| `grounded-sam` | GroundedSAM inference | `submodules/Grounded-SAM/README.md` (after submodule init) |
-| `sam3d-objects` | SAM3D textured GLB extraction | `submodules/SAM3D/README.md` (after submodule init) |
-| `qwen-vl` | Qwen3.5-VL attribute extractor | `submodules/Qwen3.6/README.md` (after submodule init) |
-
-The Qwen-VL env can grow to ~10 GB. If `/home` is tight, install conda envs under an external prefix before creating them:
+### 💻 Terminal — set everything up
 
 ```bash
-conda config --append envs_dirs /path/to/large/disk/sceneconductor_envs
+# 1️⃣  Clone with submodules
+git clone --recursive https://github.com/example/SceneConductor.git SceneConductor
+cd SceneConductor
+git submodule update --init --recursive   # only if you forgot --recursive
+# (GALP is vendored; Grounded-SAM / SAM3D / Qwen3.6 are the real submodules)
+
+# 2️⃣  Get Blender 4.2.1 (Linux x86_64)
+wget https://download.blender.org/release/Blender4.2/blender-4.2.1-linux-x64.tar.xz
+tar -xf blender-4.2.1-linux-x64.tar.xz
+./blender-4.2.1-linux-x64/blender --version   # sanity check
+
+# 3️⃣  Create ALL FIVE conda envs with ONE command (~30–60 min; builds CUDA extensions)
+./setup.sh
+
+# 4️⃣  Download model checkpoints (~25 GB) into ./checkpoints/   (see 📦 Model Checkpoints)
+
+# 5️⃣  Stage a scene — a folder whose only file is image.png
+mkdir -p scenes/my_room
+cp /path/to/photo.png scenes/my_room/image.png
+
+# 6️⃣  Launch Claude Code from the repo root
+claude
 ```
 
-See the comment block at the top of `DIRECTORYS.yaml` for the same tip.
+### 💬 Claude Code prompt — run the pipeline
 
-## Model Checkpoints
+Once you're inside the `claude` session, type:
+
+```text
+/scene-orchestration scenes/my_room
+```
+
+✨ **That's the whole flow** — `./setup.sh` builds every conda env in the terminal, and the rest is a single slash command in the prompt.
+
+> 🍎 On macOS/Windows, install Blender 4.2 manually and update `blender_bin_macos` / `blender_bin_windows` in `DIRECTORYS.yaml`.
+
+## 📋 Prerequisites
+
+- 🐧 **OS:** Linux x86_64 (the vendored Blender path targets Linux; macOS/Windows are untested for the Stage 1 SAM3D/GALP GPU paths).
+- 🎮 **GPU:** NVIDIA, CUDA 11.8+, ~30 GiB VRAM peak (SAM3D Stage 1 post-process is the bottleneck).
+- 💾 **Disk:** ~50 GB free (Blender ~4 GB + checkpoints ~21 GB + per-scene outputs).
+- 💬 **Claude Code CLI** — the pipeline is driven by slash commands. Install per https://github.com/anthropics/claude-code.
+- 🐍 **conda / miniconda** — the five environments are created for you by 💻 `./setup.sh` and invoked via `conda run -n <name>`.
+- 🚫 **Git LFS** is not required.
+
+## 🐍 Environment Setup
+
+You don't build these by hand — **💻 `./setup.sh` creates all five** with the exact library versions each stage needs, reads the names straight from `DIRECTORYS.yaml`, skips envs that already exist, and prints a summary.
+
+```bash
+./setup.sh                    # 💻 all five envs (skip existing)
+./setup.sh --all --force      # 💻 delete + rebuild everything
+./setup.sh --scenegen --qwen-vl   # 💻 only specific env(s)   ·   ./setup.sh --help
+```
+
+| Env name | 🐍 Py | Purpose |
+|---|---|---|
+| `sceneconductor` | 3.11 | Driver + Blender orchestration (pyyaml, numpy, pillow, trimesh, scipy, opencv, shapely…) |
+| `scenegen` | 3.10 | GALP layout prediction (torch cu128 + pytorch3d + TRELLIS deps) |
+| `grounded-sam` | 3.10 | GroundedSAM inference (GroundingDINO + Segment-Anything CUDA build) |
+| `sam3d-objects` | 3.11 | SAM3D textured GLB extraction (official recipe) |
+| `qwen-vl` | 3.11 | Qwen3.5-VL attribute extractor (transformers ≥5.5) |
+
+> 💾 The `qwen-vl` env alone is ~10 GB. To put the envs on a bigger disk than `/home`, just prefix the command — `setup.sh` handles the rest:
+> ```bash
+> SC_ENVS_DIR=/path/to/large/disk/sceneconductor_envs ./setup.sh
+> ```
+> 🔧 CUDA source builds (`scenegen`, `grounded-sam`) use `CUDA_HOME` (default `/usr/local/cuda`).
+
+📖 Full per-env breakdown and manual fallback: **[Installation → Conda Environments](./INSTALLATION.md#4-conda-environments--one-command-setupsh)**.
+
+## 📦 Model Checkpoints
 
 Checkpoints are not committed (~25 GB total). The GALP weights live on Hugging Face at [`WopperSet/SceneConductor`](https://huggingface.co/WopperSet/SceneConductor); GroundedSAM, SAM 3D Objects, and Qwen3.5-VL come from their official sources. See **[Installation → Model Checkpoints](./INSTALLATION.md#5-model-checkpoints)** for the exact target layout and per-model download commands.
 
-## Configuration
+## 🎬 Usage
 
-`DIRECTORYS.yaml` is the single source of truth for machine-specific paths. It has 11 keys:
-
-```yaml
-blender_bin:         ./blender-4.2.1-linux-x64/blender
-blender_bin_linux:   ./blender-4.2.1-linux-x64/blender
-blender_bin_windows: C:/Program Files/Blender Foundation/Blender 4.2/blender.exe
-blender_bin_macos:   /Applications/Blender.app/Contents/MacOS/Blender
-
-checkpoints_grounded_sam: ./checkpoints/grounded-sam
-checkpoints_galp:         ./checkpoints/galp
-checkpoints_qwen_vl:      ./checkpoints/qwen/Qwen3.5-27B
-
-galp_repo:  ./submodules/GALP
-sam3d_repo: ./submodules/SAM3D
-
-conda_envs:
-  sceneconductor: sceneconductor
-  scenegen:       scenegen
-  grounded_sam:   grounded-sam
-  sam3d_objects:  sam3d-objects
-  qwen_vl:        qwen-vl
-
-qwen_vl_model_id: Qwen/Qwen3.5-27B
-```
-
-macOS and Windows users should edit the `blender_bin_macos` / `blender_bin_windows` key to point at their local Blender 4.2 install.
-
-A runtime override is available: set `BLENDER=/path/to/blender` to bypass all `blender_bin*` keys.
-
-## Usage
-
-```bash
-/scene-orchestration scenes/my_room                  # end-to-end
-/stage1-initialize-scene scenes/my_room              # per-stage
-/stage2-environment-construction scenes/my_room
-/stage3-scene-refinement scenes/my_room
-```
-
-Flags:
-
-- `--gpu N` — Stage 1 only; pin SAM3D and GALP to a specific CUDA device.
-- `--island-refine-iter N` — Stage 3 only; per-group Opus island refinement iteration count (default 20). Equivalent to `num_max_iter`.
-- `--force` — re-run from Stage 1, bypassing all resume checks.
-
-All stages are resumable: re-invoking a stage skips work whose outputs already exist on disk. Use `--force` to override.
-
-## Tests
-
-Skills are invoked from inside the Claude Code CLI: type the slash command followed by a scene directory. The four entry points are:
+**💬 Claude Code prompt** — run the whole pipeline, or one stage at a time:
 
 ```text
-/stage1-initialize-scene scenes/my_room
+/scene-orchestration scenes/my_room              # end-to-end (runs all three)
+
+/stage1-initialize-scene scenes/my_room          # …or per-stage
 /stage2-environment-construction scenes/my_room
 /stage3-scene-refinement scenes/my_room
-/scene-orchestration scenes/my_room          # end-to-end (runs all three)
 ```
 
-The Stage 1 pipeline has a pytest suite under `tests/stage1/`. Run it with:
+**💻 Terminal** — batch a scene without the interactive prompt:
+
+```bash
+SCENE_DIR=/path/to/scene FORCE=1 bash build_one_scene_seq.sh
+```
+
+🔁 All stages are resumable: re-invoking a stage skips work whose outputs already exist on disk. Use `--force` to override.
+
+## 🧪 Tests
+
+The Stage 1 pipeline has a pytest suite under `tests/stage1/`.
+
+**💻 Terminal**
 
 ```bash
 conda run -n sceneconductor python -m pytest tests/stage1 -v
@@ -180,7 +146,7 @@ conda run -n sceneconductor python -m pytest tests/stage1 -v
 pytest tests/stage1
 ```
 
-## Repository Layout
+## 📁 Repository Layout
 
 ```
 SceneConductor/
@@ -196,18 +162,16 @@ SceneConductor/
 │   └── Qwen3.6/                   # git submodule
 ├── scripts/                       # batch runners (build_all_scenes.sh, etc.)
 ├── tests/                         # stage1 pytest
+├── setup.sh                       # one-shot conda env provisioner (all 5 envs)
 ├── DIRECTORYS.yaml                # machine-specific paths
+├── INSTALLATION.md                # full install guide
 ├── CLAUDE.md / AGENTS.md          # project rules
 ├── README.md
 ├── checkpoints/                   # gitignored — user downloads
-├── blender-4.2.1-linux-x64/       # gitignored — user downloads
-├── data/                          # gitignored — external datasets
-├── tmp/                           # gitignored — throwaway scripts (per CLAUDE.md)
-├── arxiv/ + .archive/             # gitignored — code snapshots
-└── tasks/                         # gitignored — planning docs
+└── blender-4.2.1-linux-x64/       # gitignored — user downloads
 ```
 
-## Outputs per scene_dir
+## 📂 Outputs per scene_dir
 
 ```
 <scene_dir>/
@@ -223,15 +187,16 @@ SceneConductor/
 
 `inputs/relation_graph.json` is produced by Stage 3's auto pre-step (`stage3-sub-scene-analyze-prepare`), not by Stage 1.
 
-## Troubleshooting
+## 🛠️ Troubleshooting
 
-1. **"Blender not found"** — verify the `blender_bin_*` key in `DIRECTORYS.yaml` matches your platform, or `export BLENDER=/path/to/blender` to override.
-2. **"Conda env not found"** — confirm all five environments exist with the exact names declared under `conda_envs:` in `DIRECTORYS.yaml`. Mismatched names are the most common Stage 1 failure.
-3. **CUDA OOM during Stage 1 SAM3D** — the SAM3D post-process peaks at ~30 GiB. Close other GPU processes, pin a larger device via `--gpu N`, or run on a higher-VRAM card.
-4. **"Stage skipped — already complete"** — the orchestrator caches per-stage completion. Re-run with `--force` to bypass resume and rebuild from Stage 1.
-5. **Submodule directory empty after clone** — you cloned without `--recursive`. Run `git submodule update --init --recursive`. The `submodules/GALP` directory is vendored and will be populated regardless.
+1. **🔍 "Blender not found"** — verify the `blender_bin_*` key in `DIRECTORYS.yaml` matches your platform, or `export BLENDER=/path/to/blender` to override.
+2. **🐍 "Conda env not found"** — re-run 💻 `./setup.sh` (it builds any missing env, skips existing). Names must exactly match `conda_envs:` in `DIRECTORYS.yaml` — mismatches are the most common Stage 1 failure.
+3. **🧱 An env failed to build in `./setup.sh`** — the summary marks it; rebuild just that one, e.g. 💻 `./setup.sh --grounded-sam --force`. A CUDA build error usually means `CUDA_HOME` isn't pointing at a real toolkit.
+4. **💥 CUDA OOM during Stage 1 SAM3D** — the SAM3D post-process peaks at ~30 GiB. Close other GPU processes, pin a larger device via `--gpu N`, or run on a higher-VRAM card.
+5. **⏭️ "Stage skipped — already complete"** — the orchestrator caches per-stage completion. Re-run with `--force` to bypass resume and rebuild from Stage 1.
+6. **📂 Submodule directory empty after clone** — you cloned without `--recursive`. Run 💻 `git submodule update --init --recursive`. The `submodules/GALP` directory is vendored and will be populated regardless.
 
-## Roadmap
+## 🗺️ Roadmap
 
 - [x] Code release
 - [x] Checkpoint release

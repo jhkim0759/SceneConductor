@@ -6,6 +6,41 @@ Throughout this document, `$PROJECT_ROOT` refers to the directory where you clon
 
 ---
 
+## 0. Quick Start (TL;DR)
+
+If you just want it working, copy‑paste this. It assumes Linux x86_64, an NVIDIA GPU (CUDA 11.8+), and `conda`/`miniconda` already installed. Each step is explained in the sections below.
+
+```bash
+# 1. Clone (with submodules) and enter the repo
+git clone --recurse-submodules <repo-url> SceneConductor
+cd SceneConductor
+export PROJECT_ROOT="$PWD"
+
+# 2. Get Blender 4.2.1 (vendored path)
+wget https://download.blender.org/release/Blender4.2/blender-4.2.1-linux-x64.tar.xz
+tar -xf blender-4.2.1-linux-x64.tar.xz
+
+# 3. Create ALL FIVE conda envs with one command (~30–60 min; builds CUDA extensions)
+./setup.sh
+
+# 4. Download the model checkpoints (~25 GB) — see Section 5
+#    (GroundedSAM, GALP, SAM3D, Qwen3.5-VL)
+
+# 5. Launch Claude Code from the repo root and run the pipeline
+claude
+#   then, inside Claude Code:
+#   /scene-orchestration scenes/my_room      (a folder containing only image.png)
+```
+
+That's the whole install: **one clone, one Blender download, one `./setup.sh`, the checkpoints, done.** `setup.sh` reads the env names from `DIRECTORYS.yaml`, skips any env that already exists, and prints a summary at the end. If a step fails, the matching section below has the details.
+
+> Tip: the `qwen-vl` env alone is ~10 GB. To put the envs on a bigger disk than `/home`, prefix the command:
+> ```bash
+> SC_ENVS_DIR=/path/to/large/disk/sc_envs ./setup.sh
+> ```
+
+---
+
 ## 1. General Environment Setup
 
 ### 1.1 Operating system
@@ -23,11 +58,11 @@ Throughout this document, `$PROJECT_ROOT` refers to the directory where you clon
 
 - **conda / miniconda** is required. The pipeline invokes models through `conda run -n <env-name> python ...`, so the environment **names** must match what `DIRECTORYS.yaml` declares (see Section 4).
 - The base driver environment uses **Python 3.11**.
-- Five conda environments are used in total (one shared driver env + one per model). See Section 4.
+- Five conda environments are used in total (one shared driver env + one per model). You don't create them by hand — **`./setup.sh` builds all five** (see Section 4).
 
-> Tip: the Qwen-VL env alone can reach ~10 GB. If `/home` is tight, point conda at an external prefix **before** creating the envs:
+> Tip: the Qwen-VL env alone can reach ~10 GB. If `/home` is tight, just prefix the setup command with `SC_ENVS_DIR` and `setup.sh` puts the envs on the bigger disk for you:
 > ```bash
-> conda config --append envs_dirs /path/to/large/disk/sceneconductor_envs
+> SC_ENVS_DIR=/path/to/large/disk/sceneconductor_envs ./setup.sh
 > ```
 
 ### 1.4 Blender
@@ -120,94 +155,76 @@ git submodule update --init --recursive
 
 ---
 
-## 4. Per-Submodule Environment Setup
+## 4. Conda Environments — one command: `./setup.sh`
 
-Each model runs in its **own conda environment**, invoked by the pipeline as `conda run -n <env-name> python ...`. The environment **names** are the single source of truth in `DIRECTORYS.yaml`:
+Each model runs in its **own conda environment**, invoked by the pipeline as `conda run -n <env-name> python ...`. You don't create these by hand — **`./setup.sh` builds all five for you.** The environment **names** are the single source of truth in `DIRECTORYS.yaml`, and `setup.sh` reads them straight from there:
 
 ```yaml
 conda_envs:
-  sceneconductor: sceneconductor    # default — stdlib + Blender drivers
-  galp:           scenegen          # GALP inference (torch + pytorch3d)
-  grounded-sam:   grounded-sam      # GroundedSAM inference
-  sam3d-objects:  sam3d-objects     # SAM3D textured GLB
-  qwen-vl:        qwen-vl           # Qwen3.5-VL attribute extractor
+  sceneconductor: sceneconductor    # py3.11  driver + Blender orchestration (CPU libs)
+  galp:           scenegen          # py3.10  GALP inference (torch cu128 + pytorch3d)
+  grounded-sam:   grounded-sam      # py3.10  GroundingDINO + Segment-Anything (CUDA build)
+  sam3d-objects:  sam3d-objects     # py3.11  SAM 3D Objects (official recipe)
+  qwen-vl:        qwen-vl           # py3.11  Qwen3.5-VL attribute extractor
 ```
 
-If you change any name here, update `DIRECTORYS.yaml` to match — mismatched env names are the most common Stage 1 failure.
-
-### 4.1 `sceneconductor` — driver / Blender env (Python 3.11)
-
-Lightweight env that runs the stdlib + Blender driver scripts and the Stage 2/3 orchestration Python.
+### 4.1 Run it
 
 ```bash
-conda create -n sceneconductor python=3.11 -y
-conda activate sceneconductor
-pip install pyyaml numpy pillow trimesh
+cd "$PROJECT_ROOT"
+./setup.sh
 ```
 
-### 4.2 `scenegen` — GALP env (torch + pytorch3d)
+That single command:
 
-GALP needs **PyTorch (CUDA build)** and **PyTorch3D**. The Stage 1 wrapper `.claude/skills/stage1-initialize-scene/src/run_galp.py` imports `pytorch3d.transforms` and `pytorch3d.renderer`, and resolves the GALP repo via `galp_repo: ./submodules/GALP`.
+- creates **all five** conda envs with the exact, known‑good library versions each stage needs (PyTorch CUDA builds, PyTorch3D, GroundingDINO/SAM CUDA extensions, SAM3D, transformers, …);
+- **skips** any env that already exists (so it's safe to re‑run);
+- runs the post‑steps automatically — the GALP runtime `bundle.sh` and the `Grounded-Segment-Anything` symlink;
+- prints a per‑env **summary** at the end.
+
+Expect **~30–60 min** the first time, mostly compiling CUDA extensions (PyTorch3D, flash‑attn, GroundingDINO).
+
+### 4.2 Options
 
 ```bash
-conda create -n scenegen python=3.11 -y
-conda activate scenegen
-# Install a CUDA-matched PyTorch build, then PyTorch3D, then GALP deps.
-# Follow submodules/GALP/README.md for the exact dependency list.
+./setup.sh --help                  # show all flags
+./setup.sh --all --force           # delete + rebuild every env from scratch
+./setup.sh --scenegen --qwen-vl    # build only specific env(s)
 ```
 
-> **Note:** GALP does not ship a standalone `requirements.txt`. Install PyTorch (CUDA 11.8+), PyTorch3D, OmegaConf, and the remaining imports referenced by `run_galp.py`. Consult `submodules/GALP/README.md` and `submodules/GALP/src/` for the precise versions.
->
-> `DIRECTORYS.yaml` maps the GALP role to the `scenegen` env (`conda_envs.galp: scenegen`), which is authoritative.
+| Flag | Effect |
+|---|---|
+| *(no args)* / `--all` | Create all five envs (skip existing) |
+| `--sceneconductor` | Driver / Blender env only |
+| `--scenegen` (`--galp`) | GALP inference env only |
+| `--grounded-sam` | GroundedSAM env only |
+| `--sam3d` (`--sam3d-objects`) | SAM 3D Objects env only |
+| `--qwen-vl` | Qwen3.5-VL env only |
+| `--force` | Remove and rebuild the selected env(s) |
 
-After the env exists, run the one-time GALP runtime bundling helper, which symlinks the weight files and copies the small configs into the runtime dir:
+**Environment variables it honors:**
 
-```bash
-bash .claude/skills/stage1-initialize-scene/src/galp_runtime/bundle.sh
-```
+- `CUDA_HOME` — system CUDA toolkit used to compile the CUDA extensions (default `/usr/local/cuda`). Needed for the `scenegen` and `grounded-sam` source builds.
+- `SC_ENVS_DIR` — if set, appended to conda's `envs_dirs` so the big envs (esp. the ~10 GB `qwen-vl`) land off `/home`:
+  ```bash
+  SC_ENVS_DIR=/path/to/large/disk/sc_envs ./setup.sh
+  ```
 
-### 4.3 `grounded-sam` — GroundedSAM env
+### 4.3 What each env is (reference)
 
-GroundedSAM (GroundingDINO + SAM) is loaded as a library by `.claude/skills/stage1-initialize-scene/src/grounded-sam/run_inference.py`, and the wrapper `run_grounded_sam.py` dispatches into the `grounded-sam` env.
+You normally never touch these — `setup.sh` handles them. They're listed here only so you know what failed if an env errors out.
 
-```bash
-conda create -n grounded-sam python=3.10 -y
-conda activate grounded-sam
-pip install -r submodules/Grounded-SAM/requirements.txt
-# Build/install GroundingDINO + Segment-Anything per the upstream README:
-#   submodules/Grounded-SAM/README.md
-pip install yapf   # required by the GroundingDINO import path used in Stage 1
-```
+| Env | Python | Role | Heavy deps `setup.sh` installs |
+|---|---|---|---|
+| `sceneconductor` | 3.11 | Stage 2/3 orchestration + Blender drivers | pyyaml, numpy, pillow, trimesh, scipy, opencv, shapely, matplotlib |
+| `scenegen` | 3.10 | GALP inference (`run_galp.py`) | torch (cu128), pytorch3d, spconv, xformers, flash-attn, utils3d, moge → `bundle.sh` |
+| `grounded-sam` | 3.10 | GroundingDINO + SAM (`run_inference.py`) | torch (cu128), editable `GroundingDINO`/`segment_anything`, yapf |
+| `sam3d-objects` | 3.11 | SAM 3D Objects textured GLBs (`run_sam3d.py`) | official `environments/default.yml` + `pip install -e '.[dev/p3d/inference]'` + hydra patch |
+| `qwen-vl` | 3.11 | Qwen3.5-VL attribute extractor | torch (cu128), transformers ≥5.5, accelerate, qwen-vl-utils |
 
-> **Note:** Stage 1 expects `submodules/Grounded-SAM/Grounded-Segment-Anything` to resolve to the populated submodule. If you hit `ModuleNotFoundError: GroundingDINO`, verify that path is a valid (non-stale) link/dir into the initialized submodule.
+> The pinned versions in `setup.sh` reproduce the currently‑working reference host (CUDA 12.x). If you need to change an env name, edit `DIRECTORYS.yaml` — `setup.sh` and the pipeline both read it from there. Mismatched env names are the most common Stage 1 failure.
 
-### 4.4 `sam3d-objects` — SAM 3D Objects env
-
-SAM3D generates the textured GLBs. The wrapper `.claude/skills/stage1-initialize-scene/src/run_sam3d.py` resolves the repo via `sam3d_repo: ./submodules/SAM3D` and reads its config from `submodules/SAM3D/checkpoints/hf/pipeline.yaml`.
-
-```bash
-conda create -n sam3d-objects python=3.10 -y
-conda activate sam3d-objects
-pip install -r submodules/SAM3D/requirements.txt
-pip install -r submodules/SAM3D/requirements.inference.txt
-pip install -r submodules/SAM3D/requirements.p3d.txt   # PyTorch3D-related deps
-# requirements.dev.txt is optional (development only).
-```
-
-Follow `submodules/SAM3D/README.md` for any build steps the upstream repo requires.
-
-### 4.5 `qwen-vl` — Qwen3.5-VL env
-
-Qwen3.5-VL extracts per-object attributes (used by Stage 1's `extract_object_state.py` and Stage 3's analyze-prepare step). Default model id: `Qwen/Qwen3.5-27B`.
-
-```bash
-conda create -n qwen-vl python=3.10 -y
-conda activate qwen-vl
-# Install transformers (Qwen-VL compatible), accelerate, torch (CUDA), and the
-# Qwen-VL utility deps per submodules/Qwen3.6/README.md.
-```
-
-> This env can grow to ~10 GB. Consider the external `envs_dirs` tip from Section 1.3.
+> **Manual fallback.** If you'd rather build one env by hand (e.g. to debug a build), open `setup.sh` — each env has its own clearly‑labelled `setup_<env>()` function you can read or copy step‑by‑step. The upstream recipes it follows live at `submodules/Grounded-SAM/README.md`, `submodules/SAM3D/doc/setup.md`, and `submodules/GALP/README.md`.
 
 ---
 
@@ -330,7 +347,7 @@ Blender resolution order: `$BLENDER` env var → `blender_bin_<os>` for the curr
    ```bash
    ./blender-4.2.1-linux-x64/blender --version
    ```
-2. All five conda envs exist with the exact names from `DIRECTORYS.yaml::conda_envs`:
+2. All five conda envs exist with the exact names from `DIRECTORYS.yaml::conda_envs` (the `./setup.sh` summary lists them; double‑check with):
    ```bash
    conda env list
    ```
@@ -345,8 +362,11 @@ Blender resolution order: `$BLENDER` env var → `blender_bin_<os>` for the curr
 ## 8. Troubleshooting
 
 1. **"Blender not found"** — check the `blender_bin_*` key for your platform in `DIRECTORYS.yaml`, or `export BLENDER=/path/to/blender`.
-2. **"Conda env not found"** — the env names must exactly match `conda_envs:` in `DIRECTORYS.yaml`. This is the most common Stage 1 failure.
-3. **`ModuleNotFoundError: GroundingDINO` (Stage 1)** — ensure `submodules/Grounded-SAM` is initialized and the `Grounded-Segment-Anything` path resolves into it; `pip install yapf` in the `grounded-sam` env.
-4. **CUDA OOM during Stage 1 SAM3D** — the post-process peaks at ~30 GiB. Close other GPU processes or pin a larger device with `--gpu N`.
-5. **Submodule directory empty after clone** — you cloned without `--recurse-submodules`. Run `git submodule update --init --recursive`. `submodules/GALP` is vendored and is populated regardless.
-6. **"Stage skipped — already complete"** — all stages are resumable and cache completion. Re-run with `--force` to rebuild from Stage 1.
+2. **"Conda env not found"** — re‑run `./setup.sh` (it skips envs that already exist and builds any that are missing). The env names must exactly match `conda_envs:` in `DIRECTORYS.yaml` — this is the most common Stage 1 failure.
+3. **One env failed to build in `./setup.sh`** — the end‑of‑run summary marks it. Rebuild just that one, e.g. `./setup.sh --grounded-sam --force`. A specific env failing does not abort the others.
+4. **CUDA extension build errors (`scenegen` / `grounded-sam`)** — the PyTorch3D / flash‑attn / GroundingDINO source builds need a real CUDA toolkit. Set `CUDA_HOME` to it and re‑run, e.g. `CUDA_HOME=/usr/local/cuda-12.1 ./setup.sh --grounded-sam --force`.
+5. **No space on `/home` while creating envs** — point conda at a bigger disk: `SC_ENVS_DIR=/path/to/large/disk/sc_envs ./setup.sh`.
+6. **`ModuleNotFoundError: GroundingDINO` (Stage 1)** — ensure `submodules/Grounded-SAM` is initialized and the `Grounded-Segment-Anything` path resolves into it; `pip install yapf` in the `grounded-sam` env. (`./setup.sh` creates the symlink and installs `yapf` automatically.)
+7. **CUDA OOM during Stage 1 SAM3D** — the post-process peaks at ~30 GiB. Close other GPU processes or pin a larger device with `--gpu N`.
+8. **Submodule directory empty after clone** — you cloned without `--recurse-submodules`. Run `git submodule update --init --recursive`. `submodules/GALP` is vendored and is populated regardless.
+9. **"Stage skipped — already complete"** — all stages are resumable and cache completion. Re-run with `--force` to rebuild from Stage 1.
