@@ -17,14 +17,12 @@
 [![Project Page](https://img.shields.io/badge/🏠-Project%20Page-blue.svg)](https://jhkim0759.github.io/projects/SceneConductor/)
 [![Model](https://img.shields.io/badge/🤗%20Model-SceneConductor-yellow.svg)](https://huggingface.co/WopperSet/SceneConductor)
 
+## 🔭 Pipeline
+
 <p align="center">
     <img width="95%" alt="pipeline" src="./assets/pipeline.png">
 </p>
 </h4>
-
-**SceneConductor** is a multi-agent orchestration framework that turns a single indoor RGB photograph into a fully populated, look-dev'd Blender 3D scene. It decomposes single-image 3D scene generation into three structured stages — initialization, environment construction, and planner-guided refinement — producing textured object meshes, a separable Floor/Wall/Ceiling stage, refined per-object placement, and 5-view renders. The whole pipeline is exposed as Claude Code slash commands and orchestrates open-source models (GroundedSAM, SAM 3D Objects, GALP, Qwen3.5-VL) together with several Claude Opus planning/validation passes. Here is our [Project Page](https://jhkim0759.github.io/projects/SceneConductor/).
-
-## 🔭 Pipeline
 
 The pipeline runs in three resumable stages, illustrated above:
 
@@ -37,7 +35,7 @@ The pipeline runs in three resumable stages, illustrated above:
 1. Clone the repository.
 
    ```bash
-   git clone --recursive <repo-url> SceneConductor
+   git clone --recursive https://github.com/example/SceneConductor.git SceneConductor
    cd SceneConductor
    ```
 
