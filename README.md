@@ -1,23 +1,29 @@
-# SceneConductor
+<h1 align="center">SceneConductor: 3D Scene Generation from Single Image with Multi-Agent Orchestration</h1>
 
-Single indoor RGB → fully populated, look-dev'd Blender 3D scene via Claude Code skills.
+<h4 align="center">
 
-SceneConductor is a Claude Code skills sandbox that turns one indoor photograph into a complete Blender scene: textured object meshes, a separable Floor/Wall/Ceiling stage, refined per-object placement, and 5-view renders. The pipeline is exposed as slash commands and orchestrates open-source models (GroundedSAM, SAM3D Objects, GALP, Qwen3.5-VL) plus several Claude Opus planning/validation passes.
+[Jeonghwan Kim](https://jhkim0759.github.io)
 
-## Pipeline
+S-Lab, Nanyang Technological University
 
-| Stage | Skill name | Trigger | What it does | Output |
-|---|---|---|---|---|
-| 0 (orchestrator) | `scene-orchestration` | `/scene-orchestration <scene_dir>` | Runs all three stages sequentially with resume checks | All outputs below |
-| 1 | `stage1-initialize-scene` | `/stage1-initialize-scene <scene_dir>` | GroundedSAM masks → Opus mask-evaluator merge → SAM3D textured GLBs → GALP layout prediction | `inputs/object_class.json`, `inputs/mask_attribute.json`, `inputs/layout_prediction.json` + `.glb`, `inputs/object/*.glb`, `inputs/object_state.json`, `inputs/pointmap_xz.ply`, `inputs/floor.obj`, `inputs/thumbnails/` |
-| 2 | `stage2-environment-construction` | `/stage2-environment-construction <scene_dir>` | Inspect → vision director (Opus) → polygon designer → blend build → separable stage → env enhance → 5-view render | `json/blender_scene.json`, `blend/blender_scene.blend`, `blend/stage2-scene.blend`, `render/blender_scene_view_*.png` |
-| 3 | `stage3-scene-refinement` | `/stage3-scene-refinement <scene_dir>` | Auto-prep relation graph → heuristic ops → planner review (Opus) → apply + render → validation (Opus) → per-group Opus island refinement (N iters, default 20, configurable via `num_max_iter`) → merge back → final render | `inputs/relation_graph.json`, `json/operation_plan_revised.json`, `json/island_groups.json`, `blend/stage3-scene.blend`, `render/final/blender_scene_view_*.png` |
+[![arXiv](https://img.shields.io/badge/arXiv-coming%20soon-b31b1b.svg?logo=arXiv)](#)
+[![Project Page](https://img.shields.io/badge/🏠-Project%20Page-blue.svg)](https://jhkim0759.github.io/projects/SceneConductor/)
+[![Model](https://img.shields.io/badge/🤗%20Model-SceneConductor-yellow.svg)](https://huggingface.co/WopperSet/SceneConductor)
 
-**Stage 1 — Initialize Scene.** Extracts per-object masks and class labels from the photo, lifts each mask to a textured GLB via SAM3D Objects, and runs GALP to predict a coarse room layout (pointmap, floor polygon, initial object placements).
+<p align="center">
+    <img width="95%" alt="pipeline" src="./assets/pipeline.png">
+</p>
+</h4>
 
-**Stage 2 — Environment Construction.** A vision director (Opus) reads the image, designs a rectilinear floor polygon, and builds a separable Blender stage (Floor, Wall_NN, Ceiling). It then runs a look-dev pass on lights and stage materials to match the photo, and produces 5 reference renders.
+**SceneConductor** is a multi-agent orchestration framework that turns a single indoor RGB photograph into a fully populated, look-dev'd Blender 3D scene. It decomposes single-image 3D scene generation into three structured stages — initialization, environment construction, and planner-guided refinement — producing textured object meshes, a separable Floor/Wall/Ceiling stage, refined per-object placement, and 5-view renders. The whole pipeline is exposed as Claude Code slash commands and orchestrates open-source models (GroundedSAM, SAM 3D Objects, GALP, Qwen3.5-VL) together with several Claude Opus planning/validation passes. Here is our [Project Page](https://jhkim0759.github.io/projects/SceneConductor/).
 
-**Stage 3 — Scene Refinement.** A pre-step extracts a relation graph between objects. A heuristic auto-pass produces a draft operation plan; an Opus planner reviews and revises it, including object deletions. After applying the plan and rendering, an Opus validator flags problem relation-groups; each such group is refined by a dedicated Opus island-refiner agent (default 20 iterations) that adjusts per-member translations and yaw targets. Refined groups are merged back and a final 5-view render is produced.
+## 🔭 Pipeline
+
+The pipeline runs in three resumable stages, illustrated above:
+
+- **(a) Stage 1 — Initialize Scene.** GroundedSAM masks + Opus mask-evaluator merge → SAM 3D textured GLBs → GALP layout prediction (pointmap, floor polygon, coarse placements).
+- **(b) Stage 2 — Environment Construction.** An Opus vision director designs a rectilinear floor plan, builds a separable Floor/Wall/Ceiling stage, runs a look-dev pass to match the photo, and renders 5 reference views.
+- **(c) Stage 3 — Scene Refinement.** A relation graph drives a heuristic + Opus planner pass (attach-to-floor/wall, align, remove); an Opus validator flags problem groups, each refined by a dedicated island-refiner agent before a final 5-view render.
 
 ## Quickstart
 
@@ -100,55 +106,7 @@ See the comment block at the top of `DIRECTORYS.yaml` for the same tip.
 
 ## Model Checkpoints
 
-Checkpoints are not committed. Target layout:
-
-```
-checkpoints/
-├── grounded-sam/        # GroundingDINO + SAM weights         (~3 GB)
-├── galp/                # checkpoint.pt, pipeline.yaml,
-│                        # galp.yaml, condition_embedder.ckpt   (~2 GB)
-├── sam3d/               # SAM3D Objects weights                (~6 GB)
-└── qwen/Qwen3.5-27B/    # local copy of Qwen3.5-VL             (~10 GB)
-```
-
-Total: ~21 GB.
-
-### GroundedSAM
-
-```bash
-git submodule update --init submodules/Grounded-SAM
-# Follow the weight-download instructions in submodules/Grounded-SAM/README.md
-# (GroundingDINO checkpoint + SAM ViT-H .pth). Place the files under
-# ./checkpoints/grounded-sam/ so they are discoverable by the Stage 1 mask runner.
-```
-
-### GALP
-
-```bash
-# submodules/GALP is vendored — no submodule init needed.
-# Follow submodules/GALP/README.md to obtain checkpoint.pt, pipeline.yaml,
-# galp.yaml, and condition_embedder.ckpt.
-# Place all four files under ./checkpoints/galp/.
-```
-
-### SAM3D Objects
-
-```bash
-git submodule update --init submodules/SAM3D
-# Then follow the upstream weight-download instructions in
-# submodules/SAM3D/README.md (look for "Download Pretrained Weights").
-# Place the resulting files under ./checkpoints/sam3d/ so they are
-# discoverable by .claude/skills/stage1-initialize-scene/src/run_sam3d.py
-```
-
-### Qwen3.5-VL
-
-```bash
-git submodule update --init submodules/Qwen3.6
-# Option A — local copy: download the model into ./checkpoints/qwen/Qwen3.5-27B/.
-# Option B — HuggingFace cache: leave qwen_vl_model_id: Qwen/Qwen3.5-27B in
-# DIRECTORYS.yaml and let the Transformers cache resolve it on first use.
-```
+Checkpoints are not committed (~25 GB total). The GALP weights live on Hugging Face at [`WopperSet/SceneConductor`](https://huggingface.co/WopperSet/SceneConductor); GroundedSAM, SAM 3D Objects, and Qwen3.5-VL come from their official sources. See **[Installation → Model Checkpoints](./INSTALLATION.md#5-model-checkpoints)** for the exact target layout and per-model download commands.
 
 ## Configuration
 
@@ -274,10 +232,25 @@ SceneConductor/
 - [x] Checkpoint release
 - [ ] Codex version — an OpenAI Codex / `codex-cli` compatible variant of the pipeline
 
-## Acknowledgements
+## 😊 Acknowledgements
+
+We thank all the authors who made their code public, which tremendously accelerated this project.
 
 - [Grounded-Segment-Anything](https://github.com/IDEA-Research/Grounded-Segment-Anything) — IDEA Research
 - [SAM 3D Objects](https://github.com/facebookresearch/sam-3d-objects) — Meta AI / FAIR
 - [Qwen3.5-VL](https://github.com/QwenLM/Qwen3.6) — Alibaba
 - [Blender](https://www.blender.org/) — Blender Foundation
 - Claude Code — Anthropic
+
+## 📚 Citation
+
+If you find our work helpful, please consider citing:
+
+```bibtex
+@inproceedings{sceneconductor2026,
+  title     = {SceneConductor: 3D Scene Generation from Single Image with Multi-Agent Orchestration},
+  author    = {Jeonghwan Kim},
+  booktitle = {Arxiv},
+  year      = {2026}
+}
+```
