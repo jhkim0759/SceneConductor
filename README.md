@@ -24,7 +24,7 @@
 </p>
 </h4>
 
-The pipeline runs in three resumable stages, illustrated above:
+The pipeline runs in three stages, illustrated above:
 
 - **(a) Stage 1 — Initialize Scene.** GroundedSAM masks + Opus mask-evaluator merge → SAM 3D textured GLBs → GALP layout prediction (pointmap, floor polygon, coarse placements).
 - **(b) Stage 2 — Environment Construction.** An Opus vision director designs a rectilinear floor plan, builds a separable Floor/Wall/Ceiling stage, runs a look-dev pass to match the photo, and renders 5 reference views.
@@ -56,8 +56,8 @@ tar -xf blender-4.2.1-linux-x64.tar.xz
 # 4️⃣  Download model checkpoints (~25 GB) into ./checkpoints/   (see 📦 Model Checkpoints)
 
 # 5️⃣  Stage a scene — a folder whose only file is image.png
-mkdir -p scenes/my_room
-cp /path/to/photo.png scenes/my_room/image.png
+mkdir -p <scene_dir>
+cp /path/to/photo.png <scene_dir>/image.png
 
 # 6️⃣  Launch Claude Code from the repo root
 claude
@@ -65,11 +65,18 @@ claude
 
 ### 💬 Claude Code prompt — run the pipeline
 
-Once you're inside the `claude` session, type:
+Once you're inside the `claude` session, type sequentially:
 
 ```text
-/scene-orchestration scenes/my_room
+/scene-orchestration <scene_dir>    
 ```
+or
+```text
+/stage1-scene-initialization <scene_dir>
+/stage2-environment-construction <scene_dir>
+/stage3-scene-refinement <scene_dir>
+```
+
 
 ✨ **That's the whole flow** — `./setup.sh` builds every conda env in the terminal, and the rest is a single slash command in the prompt.
 
@@ -113,18 +120,6 @@ You don't build these by hand — **💻 `./setup.sh` creates all five** with th
 ## 📦 Model Checkpoints
 
 Checkpoints are not committed (~25 GB total). The GALP weights live on Hugging Face at [`WopperSet/SceneConductor`](https://huggingface.co/WopperSet/SceneConductor); GroundedSAM, SAM 3D Objects, and Qwen3.5-VL come from their official sources. See **[Installation → Model Checkpoints](./INSTALLATION.md#5-model-checkpoints)** for the exact target layout and per-model download commands.
-
-## 🎬 Usage
-
-**💬 Claude Code prompt** — run the whole pipeline, or one stage at a time:
-
-```text
-/scene-orchestration scenes/my_room              # end-to-end (runs all three)
-
-/stage1-initialize-scene scenes/my_room          # …or per-stage
-/stage2-environment-construction scenes/my_room
-/stage3-scene-refinement scenes/my_room
-```
 
 **💻 Terminal** — batch a scene without the interactive prompt:
 
@@ -216,11 +211,11 @@ We thank all the authors who made their code public, which tremendously accelera
 
 If you find our work helpful, please consider citing:
 
-```bibtex
+<!-- ```bibtex
 @inproceedings{sceneconductor2026,
   title     = {SceneConductor: 3D Scene Generation from Single Image with Multi-Agent Orchestration},
   author    = {Jeonghwan Kim and Yushi Lan and Yongwei Chen and Hieu Trung Nguyen and Chuanyu Pan and Xingang Pan},
   booktitle = {Arxiv},
   year      = {2026}
 }
-```
+``` -->
