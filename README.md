@@ -38,36 +38,29 @@ The pipeline runs in three stages, shown above.
 
 ## 🚀 Quickstart
 
-> **🧭 Where do I type each command?** Two kinds appear in this README:
-> - 💻 **Terminal** — run in your normal shell (e.g. `./setup.sh`, `git`, `conda`).
-> - 💬 **Claude Code prompt** — type *inside* the Claude Code CLI, after you run `claude`. These are the `/slash-commands`.
+> 💻 **Terminal** = your normal shell · 💬 **Claude Code prompt** = inside the Claude Code CLI (after `claude`). Full details: **[INSTALLATION.md](./INSTALLATION.md)**.
 
 ### ✅ Step 1 (recommended) — one-skill setup
 
-Clone, launch Claude Code, and run the **`sceneconductor-setup`** skill. It provisions the whole pipeline end to end — submodules → Blender 4.2.1 → all five conda envs → all model checkpoints → a PASS/FAIL verification — so you go straight from a bare clone to a runnable scene.
-
 ```bash
-# Terminal
+# 💻 Terminal
 git clone --recursive https://github.com/jhkim0759/SceneConductor.git SceneConductor
 cd SceneConductor
 claude
 ```
 ```text
-# Claude Code prompt — provisions AND validates everything
+# 💬 Claude Code prompt
 /sceneconductor-setup
 ```
 
-Under the hood it patches the GroundingDINO CUDA source for the pinned PyTorch (so `groundingdino._C` actually builds — the #1 fresh-clone failure), downloads GroundedSAM / GALP / SAM3D / Qwen weights, and wires the SAM3D symlink. **SAM 3D Objects is a gated Hugging Face repo** — if its download fails, request access at https://huggingface.co/facebook/sam-3d-objects, create a token, then re-run with `HF_TOKEN=hf_xxx`. When the audit prints `RESULT: PASS`, jump to Step 2.
+### 💻 Step 1 (manual alternative)
 
-### 💻 Step 1 (manual alternative) — set everything up in the Terminal
+Set up each piece yourself: **[INSTALLATION.md](./INSTALLATION.md)**.
 
-Prefer the one-skill setup above. If you'd rather provision each piece yourself — clone + submodules, Blender, Claude Code, the five conda envs, and the model checkpoints — follow **[INSTALLATION.md](./INSTALLATION.md)**, then come back to Step 2.
-
-### 💬 Step 2 — Run the pipeline (Claude Code prompt)
-
-You are now inside the `claude` session. The **recommended** way is to run the three stages explicitly, in order — this gives you a checkpoint after each stage:
+### 💬 Step 2 — Run the pipeline
 
 ```text
+# 💬 Claude Code prompt — recommended: stage by stage
 /stage1-initialize-scene <scene_dir>
 ```
 ```text
@@ -76,24 +69,14 @@ You are now inside the `claude` session. The **recommended** way is to run the t
 ```text
 /stage3-scene-refinement <scene_dir>
 ```
-
-Or, to run all three back-to-back with one command:
-
 ```text
+# or all three at once
 /scene-orchestration <scene_dir>
 ```
-
-✨ **That's the whole flow.** `./setup.sh` builds every conda env. The rest is a few slash commands.
-
-**💻 Batch / non-interactive** — drive all three stages from the Terminal without opening the prompt:
-
 ```bash
+# 💻 Terminal — or non-interactive
 SCENE_DIR=/path/to/scene FORCE=1 bash scripts/build_one_scene_seq.sh
 ```
-
-🔁 Every stage is resumable. Re-running a stage skips work whose outputs already exist; `FORCE=1` overrides.
-
-> 🍎 On macOS/Windows, install Blender 4.2 by hand. Then set `blender_bin_macos` / `blender_bin_windows` in `DIRECTORYS.yaml`.
 
 ## 📋 Prerequisites
 
