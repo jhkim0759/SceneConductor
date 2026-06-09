@@ -13,7 +13,7 @@
 <sup>2</sup>University of Oxford &nbsp;&middot;&nbsp;
 <sup>3</sup>Meshy AI
 
-[![arXiv](https://img.shields.io/badge/arXiv-coming%20soon-b31b1b.svg?logo=arXiv)](#)
+[![arXiv](https://img.shields.io/badge/arXiv-2606.08402-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2606.08402)
 [![Project Page](https://img.shields.io/badge/🏠-Project%20Page-blue.svg)](https://jhkim0759.github.io/projects/SceneConductor/)
 [![Model](https://img.shields.io/badge/🤗%20Model-SceneConductor-yellow.svg)](https://huggingface.co/WopperSet/SceneConductor)
 
@@ -24,81 +24,112 @@
 </p>
 </h4>
 
-The pipeline runs in three stages, illustrated above:
+The pipeline runs in three stages, shown above.
 
-- **(a) Stage 1 — Initialize Scene.** GroundedSAM masks + Opus mask-evaluator merge → SAM 3D textured GLBs → GALP layout prediction (pointmap, floor polygon, coarse placements).
-- **(b) Stage 2 — Environment Construction.** An Opus vision director designs a rectilinear floor plan, builds a separable Floor/Wall/Ceiling stage, runs a look-dev pass to match the photo, and renders 5 reference views.
-- **(c) Stage 3 — Scene Refinement.** A relation graph drives a heuristic + Opus planner pass (attach-to-floor/wall, align, remove); an Opus validator flags problem groups, each refined by a dedicated island-refiner agent before a final 5-view render.
+- **(a) Stage 1 — Initialize Scene.** GroundedSAM produces masks. An Opus mask-evaluator merges them. SAM 3D turns each object into a textured GLB. GALP predicts the layout (pointmap, floor polygon, coarse placements).
+- **(b) Stage 2 — Environment Construction.** An Opus vision director designs a rectilinear floor plan. It builds a separable Floor/Wall/Ceiling stage. A look-dev pass matches the photo. Finally it renders 5 reference views.
+- **(c) Stage 3 — Scene Refinement.** A relation graph drives a heuristic + Opus planner pass (attach-to-floor/wall, align, remove). An Opus validator flags problem groups. A dedicated island-refiner agent fixes each group. Then it renders the final 5 views.
 
 ## 🚀 Quickstart
 
-> **🧭 Where do I type this?** Two kinds of commands appear throughout this README:
+> **🧭 Where do I type each command?** Two kinds appear in this README:
 > - 💻 **Terminal** — run in your normal shell (e.g. `./setup.sh`, `git`, `conda`).
-> - 💬 **Claude Code prompt** — type *inside* the Claude Code CLI after you run `claude`. These are the `/slash-commands`.
+> - 💬 **Claude Code prompt** — type *inside* the Claude Code CLI, after you run `claude`. These are the `/slash-commands`.
 
-### 💻 Terminal — set everything up
+### 💻 Step 1 — Set everything up (Terminal)
+
+Run these commands in order from your shell.
 
 ```bash
-# 1️⃣  Clone with submodules
+# 1. Clone with submodules
 git clone --recursive https://github.com/example/SceneConductor.git SceneConductor
 cd SceneConductor
-git submodule update --init --recursive   # only if you forgot --recursive
-# (GALP is vendored; Grounded-SAM / SAM3D / Qwen3.6 are the real submodules)
+```
 
-# 2️⃣  Get Blender 4.2.1 (Linux x86_64)
+```bash
+# If you forgot --recursive, fetch the submodules now
+git submodule update --init --recursive
+```
+
+```bash
+# 2. Download Blender 4.2.1 (Linux x86_64) and verify it
 wget https://download.blender.org/release/Blender4.2/blender-4.2.1-linux-x64.tar.xz
 tar -xf blender-4.2.1-linux-x64.tar.xz
-./blender-4.2.1-linux-x64/blender --version   # sanity check
+./blender-4.2.1-linux-x64/blender --version
+```
 
-# 3️⃣  Create ALL FIVE conda envs with ONE command (~30–60 min; builds CUDA extensions)
+```bash
+# 3. Create all five conda envs with one command (~30-60 min; builds CUDA extensions)
 ./setup.sh
+```
 
-# 4️⃣  Download model checkpoints (~25 GB) into ./checkpoints/   (see 📦 Model Checkpoints)
+```bash
+# 4. Download model checkpoints (~25 GB) into ./checkpoints/  (see 📦 Model Checkpoints)
+```
 
-# 5️⃣  Stage a scene — a folder whose only file is image.png
+```bash
+# 5. Stage a scene. A scene is a folder whose only file is image.png
 mkdir -p <scene_dir>
 cp /path/to/photo.png <scene_dir>/image.png
+```
 
-# 6️⃣  Launch Claude Code from the repo root
+```bash
+# 6. Launch Claude Code from the repo root
 claude
 ```
 
-### 💬 Claude Code prompt — run the pipeline
+### 💬 Step 2 — Run the pipeline (Claude Code prompt)
 
-Once you're inside the `claude` session, type sequentially:
+You are now inside the `claude` session. Run all three stages with one command:
 
 ```text
-/scene-orchestration <scene_dir>    
+/scene-orchestration <scene_dir>
 ```
-or
+
+Or run each stage yourself, in order:
+
 ```text
-/stage1-scene-initialization <scene_dir>
+/stage1-initialize-scene <scene_dir>
+```
+```text
 /stage2-environment-construction <scene_dir>
+```
+```text
 /stage3-scene-refinement <scene_dir>
 ```
 
+✨ **That's the whole flow.** `./setup.sh` builds every conda env. The rest is a single slash command.
 
-✨ **That's the whole flow** — `./setup.sh` builds every conda env in the terminal, and the rest is a single slash command in the prompt.
-
-> 🍎 On macOS/Windows, install Blender 4.2 manually and update `blender_bin_macos` / `blender_bin_windows` in `DIRECTORYS.yaml`.
+> 🍎 On macOS/Windows, install Blender 4.2 by hand. Then set `blender_bin_macos` / `blender_bin_windows` in `DIRECTORYS.yaml`.
 
 ## 📋 Prerequisites
 
-- 🐧 **OS:** Linux x86_64 (the vendored Blender path targets Linux; macOS/Windows are untested for the Stage 1 SAM3D/GALP GPU paths).
-- 🎮 **GPU:** NVIDIA, CUDA 11.8+, ~30 GiB VRAM peak (SAM3D Stage 1 post-process is the bottleneck).
+- 🐧 **OS:** Linux x86_64. The vendored Blender path targets Linux. macOS/Windows are untested for the Stage 1 SAM3D/GALP GPU paths.
+- 🎮 **GPU:** NVIDIA, CUDA 11.8+, ~30 GiB VRAM peak. The SAM3D Stage 1 post-process is the bottleneck.
 - 💾 **Disk:** ~50 GB free (Blender ~4 GB + checkpoints ~21 GB + per-scene outputs).
-- 💬 **Claude Code CLI** — the pipeline is driven by slash commands. Install per https://github.com/anthropics/claude-code.
-- 🐍 **conda / miniconda** — the five environments are created for you by 💻 `./setup.sh` and invoked via `conda run -n <name>`.
+- 💬 **Claude Code CLI** — the pipeline runs on slash commands. Install it from https://github.com/anthropics/claude-code.
+- 🐍 **conda / miniconda** — `./setup.sh` builds the five envs. Each is invoked via `conda run -n <name>`.
 - 🚫 **Git LFS** is not required.
 
 ## 🐍 Environment Setup
 
-You don't build these by hand — **💻 `./setup.sh` creates all five** with the exact library versions each stage needs, reads the names straight from `DIRECTORYS.yaml`, skips envs that already exist, and prints a summary.
+You don't build the envs by hand. **💻 `./setup.sh` creates all five.** It pins the exact library versions each stage needs, reads the names from `DIRECTORYS.yaml`, skips envs that already exist, and prints a summary.
 
 ```bash
-./setup.sh                    # 💻 all five envs (skip existing)
-./setup.sh --all --force      # 💻 delete + rebuild everything
-./setup.sh --scenegen --qwen-vl   # 💻 only specific env(s)   ·   ./setup.sh --help
+# Create all five envs (skips any that already exist)
+./setup.sh
+```
+```bash
+# Delete and rebuild everything
+./setup.sh --all --force
+```
+```bash
+# Build only specific envs
+./setup.sh --scenegen --qwen-vl
+```
+```bash
+# See all options
+./setup.sh --help
 ```
 
 | Env name | 🐍 Py | Purpose |
@@ -109,7 +140,7 @@ You don't build these by hand — **💻 `./setup.sh` creates all five** with th
 | `sam3d-objects` | 3.11 | SAM3D textured GLB extraction (official recipe) |
 | `qwen-vl` | 3.11 | Qwen3.5-VL attribute extractor (transformers ≥5.5) |
 
-> 💾 The `qwen-vl` env alone is ~10 GB. To put the envs on a bigger disk than `/home`, just prefix the command — `setup.sh` handles the rest:
+> 💾 The `qwen-vl` env alone is ~10 GB. To put the envs on a larger disk than `/home`, prefix the command. `setup.sh` handles the rest:
 > ```bash
 > SC_ENVS_DIR=/path/to/large/disk/sceneconductor_envs ./setup.sh
 > ```
@@ -119,7 +150,7 @@ You don't build these by hand — **💻 `./setup.sh` creates all five** with th
 
 ## 📦 Model Checkpoints
 
-Checkpoints are not committed (~25 GB total). The GALP weights live on Hugging Face at [`WopperSet/SceneConductor`](https://huggingface.co/WopperSet/SceneConductor); GroundedSAM, SAM 3D Objects, and Qwen3.5-VL come from their official sources. See **[Installation → Model Checkpoints](./INSTALLATION.md#5-model-checkpoints)** for the exact target layout and per-model download commands.
+Checkpoints are not committed (~25 GB total). The GALP weights live on Hugging Face at [`WopperSet/SceneConductor`](https://huggingface.co/WopperSet/SceneConductor). GroundedSAM, SAM 3D Objects, and Qwen3.5-VL come from their official sources. See **[Installation → Model Checkpoints](./INSTALLATION.md#5-model-checkpoints)** for the target layout and per-model download commands.
 
 **💻 Terminal** — batch a scene without the interactive prompt:
 
@@ -127,7 +158,7 @@ Checkpoints are not committed (~25 GB total). The GALP weights live on Hugging F
 SCENE_DIR=/path/to/scene FORCE=1 bash build_one_scene_seq.sh
 ```
 
-🔁 All stages are resumable: re-invoking a stage skips work whose outputs already exist on disk. Use `--force` to override.
+🔁 Every stage is resumable. Re-running a stage skips work whose outputs already exist. Use `--force` to override.
 
 ## 🧪 Tests
 
@@ -136,8 +167,11 @@ The Stage 1 pipeline has a pytest suite under `tests/stage1/`.
 **💻 Terminal**
 
 ```bash
+# Run the suite
 conda run -n sceneconductor python -m pytest tests/stage1 -v
-# or, with the sceneconductor env active:
+```
+```bash
+# Or, with the sceneconductor env already active
 pytest tests/stage1
 ```
 
@@ -184,12 +218,12 @@ SceneConductor/
 
 ## 🛠️ Troubleshooting
 
-1. **🔍 "Blender not found"** — verify the `blender_bin_*` key in `DIRECTORYS.yaml` matches your platform, or `export BLENDER=/path/to/blender` to override.
-2. **🐍 "Conda env not found"** — re-run 💻 `./setup.sh` (it builds any missing env, skips existing). Names must exactly match `conda_envs:` in `DIRECTORYS.yaml` — mismatches are the most common Stage 1 failure.
-3. **🧱 An env failed to build in `./setup.sh`** — the summary marks it; rebuild just that one, e.g. 💻 `./setup.sh --grounded-sam --force`. A CUDA build error usually means `CUDA_HOME` isn't pointing at a real toolkit.
-4. **💥 CUDA OOM during Stage 1 SAM3D** — the SAM3D post-process peaks at ~30 GiB. Close other GPU processes, pin a larger device via `--gpu N`, or run on a higher-VRAM card.
-5. **⏭️ "Stage skipped — already complete"** — the orchestrator caches per-stage completion. Re-run with `--force` to bypass resume and rebuild from Stage 1.
-6. **📂 Submodule directory empty after clone** — you cloned without `--recursive`. Run 💻 `git submodule update --init --recursive`. The `submodules/GALP` directory is vendored and will be populated regardless.
+1. **🔍 "Blender not found"** — check that the `blender_bin_*` key in `DIRECTORYS.yaml` matches your platform. Or run `export BLENDER=/path/to/blender` to override it.
+2. **🐍 "Conda env not found"** — re-run 💻 `./setup.sh`. It builds any missing env and skips existing ones. Names must exactly match `conda_envs:` in `DIRECTORYS.yaml`. A mismatch is the most common Stage 1 failure.
+3. **🧱 An env failed to build in `./setup.sh`** — the summary marks it. Rebuild just that one, e.g. 💻 `./setup.sh --grounded-sam --force`. A CUDA build error usually means `CUDA_HOME` isn't pointing at a real toolkit.
+4. **💥 CUDA OOM during Stage 1 SAM3D** — the SAM3D post-process peaks at ~30 GiB. Close other GPU processes, pin a larger device with `--gpu N`, or use a higher-VRAM card.
+5. **⏭️ "Stage skipped — already complete"** — the orchestrator caches per-stage completion. Re-run with `--force` to rebuild from Stage 1.
+6. **📂 Submodule directory empty after clone** — you cloned without `--recursive`. Run 💻 `git submodule update --init --recursive`. The `submodules/GALP` directory is vendored and is populated regardless.
 
 ## 🗺️ Roadmap
 
@@ -199,23 +233,26 @@ SceneConductor/
 
 ## 😊 Acknowledgements
 
-We thank all the authors who made their code public, which tremendously accelerated this project.
+We thank all the authors who made their code public. It tremendously accelerated this project.
 
-- [Grounded-Segment-Anything](https://github.com/IDEA-Research/Grounded-Segment-Anything) — IDEA Research
-- [SAM 3D Objects](https://github.com/facebookresearch/sam-3d-objects) — Meta AI / FAIR
-- [Qwen3.5-VL](https://github.com/QwenLM/Qwen3.6) — Alibaba
-- [Blender](https://www.blender.org/) — Blender Foundation
-- Claude Code — Anthropic
+- [Grounded-Segment-Anything](https://github.com/IDEA-Research/Grounded-Segment-Anything)
+- [SAM 3D Objects](https://github.com/facebookresearch/sam-3d-objects)
+- [Qwen3.5-VL](https://github.com/QwenLM/Qwen3.6)
+- [Blender](https://www.blender.org/)
+- Claude Code
 
 ## 📚 Citation
 
 If you find our work helpful, please consider citing:
 
-<!-- ```bibtex
-@inproceedings{sceneconductor2026,
-  title     = {SceneConductor: 3D Scene Generation from Single Image with Multi-Agent Orchestration},
-  author    = {Jeonghwan Kim and Yushi Lan and Yongwei Chen and Hieu Trung Nguyen and Chuanyu Pan and Xingang Pan},
-  booktitle = {Arxiv},
-  year      = {2026}
+```bibtex
+@misc{kim2026sceneconductor3dscenegeneration,
+      title={SceneConductor: 3D Scene Generation from Single Image with Multi-Agent Orchestration},
+      author={Jeonghwan Kim and Yushi Lan and Yongwei Chen and Hieu Trung Nguyen and Chuanyu Pan and Xingang Pan},
+      year={2026},
+      eprint={2606.08402},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2606.08402},
 }
-``` -->
+```
