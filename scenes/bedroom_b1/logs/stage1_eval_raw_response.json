@@ -1,0 +1,24 @@
+{
+  "schema_version": "stage1-mask-evaluator-v2-lowest-keep-id",
+  "delete_ids": [],
+  "merge_groups": [
+    {"keep_id": 6, "absorb_ids": [4, 5, 10, 19], "reason": "surface-clutter absorb: bedding (pillows) on bed (anti-float rule)"},
+    {"keep_id": 8, "absorb_ids": [16, 17, 18], "reason": "drawer fronts are part of nightstand 8"},
+    {"keep_id": 9, "absorb_ids": [11, 15], "reason": "curtain+window-curtain over the same window region as 9"}
+  ],
+  "mesh_groups": {
+    "table_lamp": {"canonical_id": 1, "instance_ids": [1]},
+    "picture_frame_photo": {"canonical_id": 2, "instance_ids": [2]},
+    "picture_frame_art": {"canonical_id": 3, "instance_ids": [3]},
+    "bed": {"canonical_id": 6, "instance_ids": [6]},
+    "side_table": {"canonical_id": 7, "instance_ids": [7]},
+    "nightstand": {"canonical_id": 8, "instance_ids": [8]},
+    "window_left": {"canonical_id": 9, "instance_ids": [9]},
+    "window_right": {"canonical_id": 12, "instance_ids": [12]},
+    "table_device": {"canonical_id": 13, "instance_ids": [13]},
+    "book_stack": {"canonical_id": 14, "instance_ids": [14]}
+  },
+  "candidate_merge_groups": [],
+  "candidate_mesh_groups": [],
+  "candidate_split_groups": []
+}

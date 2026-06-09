@@ -1,0 +1,11 @@
+[run_stage1] --force: bypassing eval cache, deleted merge_plan.json + remask_plan.json
+[run_stage1] eval CACHE_MISS reason=force scene=bedroom_b1 image_sha=78e00242f3c1 prompt_sha=71088f90c6a9 script_sha=91cfc76932b9
+
+=== [run_stage1] Phase eval — Mask-Evaluator (Opus vision API call) ===
+[run_mask_evaluator] Running claude CLI (opus) on /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 ...
+[run_mask_evaluator] merge_plan.json validated and meta injected -> /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/merge_plan.json (raw_bytes=1191, wall_sec=147.89, raw_copy=/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/logs/stage1_eval_raw_response.json)
+[run_mask_evaluator] Done.
+[run_stage1] eval DONE scene=bedroom_b1 wall_sec=148.96 raw_bytes=1191 merge_plan=/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/merge_plan.json
+
+=== [run_stage1] PHASE eval complete ===
+    Next: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2

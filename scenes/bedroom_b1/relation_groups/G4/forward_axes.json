@@ -1,0 +1,33 @@
+{
+  "scene_dir": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1",
+  "group_id": "G4",
+  "forward_axes_local": {
+    "obj_13": {
+      "axis": "-Y",
+      "confidence": 0.8791,
+      "backrest_offset_xy_local": [
+        -0.006987,
+        0.050829
+      ],
+      "method": "upper_half_centroid_vs_full_centroid"
+    },
+    "obj_14": {
+      "axis": "-Y",
+      "confidence": 0.9317,
+      "backrest_offset_xy_local": [
+        -0.001851,
+        0.025238
+      ],
+      "method": "upper_half_centroid_vs_full_centroid"
+    },
+    "obj_7": {
+      "axis": "-Y",
+      "confidence": 0.669,
+      "backrest_offset_xy_local": [
+        -0.013987,
+        0.028269
+      ],
+      "method": "upper_half_centroid_vs_full_centroid"
+    }
+  }
+}

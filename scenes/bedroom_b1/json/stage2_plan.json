@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.1",
+  "scene_summary": "Bright sunlit bedroom, roughly 3-3.5m wide, with white painted walls and a warm honey-toned hardwood floor. A double bed with white polka-dot bedding sits centrally against the camera-far wall, flanked by a white three-drawer nightstand (camera-left) and a wooden side table (camera-right). A large multi-pane window dominates the camera-left/far wall behind the bed; framed pictures hang on the left and right walls.",
+  "polygon_brief": "rectangular room shot down its length toward the far wall; large window on the camera-left/far wall behind the bed, framed art on both side walls, no visible doorway (likely behind camera)",
+  "materials_hint": {
+    "wall_hex": "E7E4DD",
+    "wall_lower_hex": null,
+    "floor_hex": "9C6B3E",
+    "ceiling_hex": "EDE7DB"
+  },
+  "lighting_hint": {
+    "mood": "soft_diffuse"
+  },
+  "openings_hint": [
+    {
+      "kind": "window",
+      "camera_side": "front",
+      "approx_height": 1.4,
+      "approx_width": 1.6,
+      "z_from_floor": 0.8,
+      "notes": "large multi-pane window behind the bed on the camera-far wall, bright daylight flooding in"
+    },
+    {
+      "kind": "doorway",
+      "camera_side": "behind",
+      "approx_height": 2.0,
+      "approx_width": 0.8,
+      "z_from_floor": 0.0,
+      "notes": "not visible in frame; inferred — entry presumed behind camera"
+    }
+  ],
+  "scale_prior": {
+    "scene_scale_class": "standard",
+    "expected_room_footprint_m": [
+      2.8,
+      4.5
+    ],
+    "expected_room_height_m": [
+      2.3,
+      3.0
+    ],
+    "reasoning": "Full-size adult double bed and standard three-drawer nightstand imply a normal adult-scaled bedroom.",
+    "confidence": 0.55
+  },
+  "confidence": {
+    "polygon": 0.75,
+    "materials": 0.85,
+    "openings": 0.6
+  },
+  "_director_meta": {
+    "model": "opus",
+    "image_sha256": "78e00242f3c1329ac5da0bafa41b7c12b212663d3d138093a2d5e775c4f08f5a",
+    "generated_by": "run_stage2_director.py",
+    "timestamp_utc": "2026-06-09T06:44:26Z"
+  }
+}

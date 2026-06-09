@@ -1,0 +1,89 @@
+{
+  "scene_dir": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1",
+  "groups": [
+    {
+      "group_id": "G1",
+      "name": "Back Wall Picture Frames",
+      "edge_type": "mounted_on_same_wall",
+      "anchor": "back_wall",
+      "members": ["obj_2", "obj_3"],
+      "evidence": "obj_2 (picture frame, loc Y=5.39) and obj_3 (picture frame, loc Y=4.59) both have near-zero depth dimensions (0.030m, 0.016m) confirming wall mounting, and both appear on the back wall of the bedroom (back wall at Y~6.10). Both are attached_to=wall per object_state.json. Both are visible on the back/side walls in the reference image."
+    },
+    {
+      "group_id": "G2",
+      "name": "Back Wall Windows",
+      "edge_type": "mounted_on_same_wall",
+      "anchor": "back_wall",
+      "members": ["obj_9", "obj_12"],
+      "evidence": "obj_9 (window, loc Y=5.15) and obj_12 (window, loc Y=5.33) are both located near the back wall (Y~6.10), both have minimal depth (0.264m, 0.064m), both are attached_to=wall per object_state.json. The image shows two windows side-by-side on the back wall of the bedroom. They share a collision (vol=0.252), which is consistent with being co-planar on the same wall."
+    },
+    {
+      "group_id": "G3",
+      "name": "Lamp on Left Nightstand",
+      "edge_type": "on_top_of",
+      "anchor": "obj_8",
+      "members": ["obj_1"],
+      "evidence": "obj_1 (table lamp) is confirmed on top of obj_8 (nightstand) by object_state.json stacking entry {base: obj_8, top: [obj_1]}. obj_1 Z=-0.548 is above obj_8 Z=-1.305 (obj_8 height=0.632 so top at -1.305+0.316=-0.989). The lamp appears visually on the left nightstand in the reference image."
+    },
+    {
+      "group_id": "G4",
+      "name": "Bag and Book on Right Nightstand",
+      "edge_type": "on_top_of",
+      "anchor": "obj_7",
+      "members": ["obj_13", "obj_14"],
+      "evidence": "obj_13 (bag) and obj_14 (book) are confirmed on top of obj_7 (nightstand) by object_state.json stacking entry {base: obj_7, top: [obj_13, obj_14]}. Both have Z ~ -0.76 to -0.83, obj_7 top is at -0.920+0.582/2=-0.629m, consistent with objects resting on or near the top surface. Collisions confirm proximity: obj_13<->obj_7 vol=0.008, obj_14<->obj_7 vol=0.010. Visible on right nightstand in reference image."
+    }
+  ],
+  "edges": [
+    {
+      "source": "obj_2",
+      "target": "back_wall",
+      "type": "mounted_on_same_wall",
+      "confidence": 0.95,
+      "evidence": "obj_2 picture frame: near-zero depth (0.030m), Y=5.39 (near back wall Y=6.10), attached_to=wall"
+    },
+    {
+      "source": "obj_3",
+      "target": "back_wall",
+      "type": "mounted_on_same_wall",
+      "confidence": 0.95,
+      "evidence": "obj_3 picture frame: near-zero depth (0.016m), Y=4.59, attached_to=wall, visible on left side of back wall area in image"
+    },
+    {
+      "source": "obj_9",
+      "target": "back_wall",
+      "type": "mounted_on_same_wall",
+      "confidence": 0.98,
+      "evidence": "obj_9 window: Y=5.15, depth=0.264m, attached_to=wall; the two bedroom windows share the back wall"
+    },
+    {
+      "source": "obj_12",
+      "target": "back_wall",
+      "type": "mounted_on_same_wall",
+      "confidence": 0.98,
+      "evidence": "obj_12 window: Y=5.33, depth=0.064m, attached_to=wall; collision with obj_9 confirms co-planar wall mounting"
+    },
+    {
+      "source": "obj_1",
+      "target": "obj_8",
+      "type": "on_top_of",
+      "confidence": 0.99,
+      "evidence": "Confirmed by stacking entry in object_state.json: base=obj_8, top=[obj_1]. Lamp visually rests on left nightstand in image."
+    },
+    {
+      "source": "obj_13",
+      "target": "obj_7",
+      "type": "on_top_of",
+      "confidence": 0.97,
+      "evidence": "Confirmed by stacking entry in object_state.json: base=obj_7, top=[obj_13, obj_14]. Collision vol=0.008 also supports proximity."
+    },
+    {
+      "source": "obj_14",
+      "target": "obj_7",
+      "type": "on_top_of",
+      "confidence": 0.97,
+      "evidence": "Confirmed by stacking entry in object_state.json: base=obj_7, top=[obj_13, obj_14]. Collision vol=0.010 also supports proximity."
+    }
+  ],
+  "cross_group_edges": []
+}

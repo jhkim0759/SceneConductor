@@ -1,0 +1,128 @@
+{
+  "polygon_vertices": [
+    [
+      -1.9,
+      -0.2
+    ],
+    [
+      1.9,
+      -0.2
+    ],
+    [
+      1.9,
+      5.85
+    ],
+    [
+      -1.9,
+      5.85
+    ]
+  ],
+  "polygon_centroid_xy": [
+    0.0,
+    2.825
+  ],
+  "floor_z": -1.628224,
+  "ceiling_z": 1.163014,
+  "wall_thickness": 0.25,
+  "floor_thickness": 0.3,
+  "ceiling_thickness": 0.3,
+  "wall_edges": [
+    {
+      "from": 0,
+      "to": 1,
+      "object": "Wall_01",
+      "orientation": "unspecified"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "object": "Wall_02",
+      "orientation": "wall_mount",
+      "wall_mount_evidence": [
+        {
+          "id": "obj_2",
+          "class": "picture frame",
+          "dist_m": 0.397
+        }
+      ]
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "object": "Wall_03",
+      "orientation": "wall_mount",
+      "wall_mount_evidence": [
+        {
+          "id": "obj_2",
+          "class": "picture frame",
+          "dist_m": 0.435
+        },
+        {
+          "id": "obj_9",
+          "class": "window",
+          "dist_m": 0.129
+        },
+        {
+          "id": "obj_12",
+          "class": "window",
+          "dist_m": 0.407
+        }
+      ]
+    },
+    {
+      "from": 3,
+      "to": 0,
+      "object": "Wall_04",
+      "orientation": "wall_mount",
+      "wall_mount_evidence": [
+        {
+          "id": "obj_3",
+          "class": "picture frame",
+          "dist_m": 0.14
+        },
+        {
+          "id": "obj_9",
+          "class": "window",
+          "dist_m": 0.357
+        }
+      ]
+    }
+  ],
+  "open_edges": [],
+  "openings": [],
+  "camera_xy": [
+    0.0,
+    0.0
+  ],
+  "camera_source": "blender_camera",
+  "source_frame": "blend_world",
+  "buffer_m": 0.1,
+  "rect_angle_deg": 0.0,
+  "yaw_deg": 0.0,
+  "generator": "stage2-sub-pointmap-to-separable-stage",
+  "fitter": {
+    "source": "draft",
+    "shape": "draft (4 verts)",
+    "max_verts": 6,
+    "min_improvement": 0.005,
+    "search_areas": {}
+  },
+  "wall_mount_objects": [
+    {
+      "id": "obj_2",
+      "class": "picture frame"
+    },
+    {
+      "id": "obj_3",
+      "class": "picture frame"
+    },
+    {
+      "id": "obj_9",
+      "class": "window"
+    },
+    {
+      "id": "obj_12",
+      "class": "window"
+    }
+  ]
+}

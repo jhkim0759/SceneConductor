@@ -1,0 +1,21 @@
+{
+  "scene_dir": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1",
+  "step": "done",
+  "step_status": "ok",
+  "started_at": "2026-06-09T06:50:15Z",
+  "updated_at": "2026-06-09T07:06:47Z",
+  "scene_refiner_ops": 0,
+  "islands_pending": [],
+  "islands_completed": [
+    "G4"
+  ],
+  "islands_failed": [],
+  "merge_back_blend": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/blend/stage3-scene.blend",
+  "render_outputs": [
+    "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/render/final/blender_scene_view_perspective.png",
+    "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/render/final/blender_scene_view_bev.png",
+    "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/render/final/blender_scene_view_wide.png",
+    "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/render/final/blender_scene_view_topcorner.png",
+    "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/render/final/blender_scene_view_topcorner_opposite.png"
+  ]
+}

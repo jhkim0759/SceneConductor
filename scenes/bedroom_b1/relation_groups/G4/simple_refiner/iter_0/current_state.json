@@ -1,0 +1,31 @@
+{
+  "iter": 0,
+  "frame": "canonical",
+  "_note": "Baseline absolute object poses at iter 0. position in metres, yaw_deg is rotation about Z.",
+  "obj_positions": {
+    "obj_13": {
+      "position": [
+        -0.091697,
+        0.446957,
+        0.764057
+      ],
+      "yaw_deg": -66.9772
+    },
+    "obj_14": {
+      "position": [
+        -0.068763,
+        0.388084,
+        0.758735
+      ],
+      "yaw_deg": -34.7198
+    },
+    "obj_7": {
+      "position": [
+        -0.0,
+        0.0,
+        -0.0
+      ],
+      "yaw_deg": 0.0
+    }
+  }
+}

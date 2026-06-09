@@ -1,0 +1,33 @@
+{
+  "delete_candidates": [],
+  "merge_into_candidates": [],
+  "review_candidates": [
+    {
+      "id": 14,
+      "area_px": 865,
+      "area_ratio": 0.000825,
+      "top_neighbors": [
+        {
+          "id": 7,
+          "area_px": 8461,
+          "dilated_touch_px": 928
+        },
+        {
+          "id": 13,
+          "area_px": 3022,
+          "dilated_touch_px": 498
+        }
+      ],
+      "reason": "small but ambiguous neighbor profile \u2014 evaluator decides"
+    }
+  ],
+  "thresholds": {
+    "small_ratio": 0.001,
+    "isolated_ratio": 0.0005,
+    "dilate_px": 5,
+    "min_touch_px": 200,
+    "dominant_ratio": 5.0
+  },
+  "n_masks": 19,
+  "image_area_px": 1048576
+}

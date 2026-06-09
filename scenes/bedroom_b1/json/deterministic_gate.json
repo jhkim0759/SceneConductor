@@ -1,0 +1,48 @@
+{
+  "flagged_groups": [
+    "G4"
+  ],
+  "rationale_by_group": {
+    "G4": "obj_13 (on_top_of): member_base_z=-0.630 anchor_top_z=-1.043 gap=0.413m exceeds 0.05m tolerance (floating); obj_14 (on_top_of): member_base_z=-0.636 anchor_top_z=-1.043 gap=0.407m exceeds 0.05m tolerance (floating)"
+  },
+  "per_member_checks": {
+    "G3": [
+      {
+        "member": "obj_1",
+        "edge_type": "on_top_of",
+        "ok": true,
+        "reason": "pass"
+      }
+    ],
+    "G4": [
+      {
+        "member": "obj_13",
+        "edge_type": "on_top_of",
+        "ok": false,
+        "reason": "member_base_z=-0.630 anchor_top_z=-1.043 gap=0.413m exceeds 0.05m tolerance (floating)"
+      },
+      {
+        "member": "obj_14",
+        "edge_type": "on_top_of",
+        "ok": false,
+        "reason": "member_base_z=-0.636 anchor_top_z=-1.043 gap=0.407m exceeds 0.05m tolerance (floating)"
+      }
+    ]
+  },
+  "skipped_groups": {
+    "G1": "edge_type 'mounted_on_same_wall' not in v1 scope (handled: ['on_top_of', 'seated_around'])",
+    "G2": "edge_type 'mounted_on_same_wall' not in v1 scope (handled: ['on_top_of', 'seated_around'])"
+  },
+  "thresholds": {
+    "z_tol_m": 0.05,
+    "xy_margin_m": 0.1,
+    "seated_max_dist_factor": 3.0,
+    "seated_max_yaw_deg": 75.0
+  },
+  "blend_used": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/blend/stage3-sub-planned.blend",
+  "meta": {
+    "generator": "deterministic_gate.py",
+    "version": "1",
+    "timestamp_utc": "2026-06-09T06:58:19Z"
+  }
+}

@@ -1,0 +1,627 @@
+{
+  "meta": {
+    "schema_version": "2.0",
+    "source": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/layout_prediction.json",
+    "coordinate_system": "blender",
+    "conversion": "trimesh(x,y,z) -> blender(-x,z,y)",
+    "units": "meters",
+    "rotation_order": "XYZ",
+    "rotation_unit": "radians",
+    "camera_rotation_fix": "rz -> rz + 180 (normalized to (-180,180])",
+    "object_rotation_fix": "objects[].rotation_euler[z] -> rz + 180 (normalized to (-180,180])",
+    "world_scale_factor": 1.9912087600934951,
+    "world_scale_method": "class_priors_vision_gated",
+    "world_scale_factor_raw": 1.8564756021890794,
+    "world_scale_clamp_bounds": [
+      0.1,
+      20.0
+    ],
+    "world_scale_clamped": false,
+    "world_scale_vision_gate_applied": true,
+    "world_scale_vision_prior": {
+      "scene_scale_class": "standard",
+      "expected_room_footprint_m": [
+        2.8,
+        4.5
+      ],
+      "expected_room_height_m": [
+        2.3,
+        3.0
+      ],
+      "reasoning": "Full-size adult double bed and standard three-drawer nightstand imply a normal adult-scaled bedroom.",
+      "confidence": 0.55
+    },
+    "world_scale_before_gate": 1.8564756021890794,
+    "class_map_source": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/mask_attribute.json"
+  },
+  "scene": {
+    "shifted_center_blender": [
+      0.016472331512771617,
+      3.3507649076249066,
+      0.4080716594657899
+    ],
+    "shifted_scale": 2.2172657850695003
+  },
+  "camera": {
+    "location": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "rotation_euler": [
+      1.4017087670763486,
+      0.02206096276053849,
+      -0.004991562831135516
+    ],
+    "rotation_euler_deg": [
+      80.31199645996094,
+      1.2640000581741333,
+      -0.2859954833984375
+    ],
+    "lens": 49.060216426849365,
+    "sensor_width": 36.0,
+    "sensor_fit": "HORIZONTAL",
+    "resolution": [
+      1,
+      1
+    ],
+    "clip_start": 0.01,
+    "clip_end": 100.0
+  },
+  "objects": [
+    {
+      "id": "obj_1",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/1.glb",
+      "location": [
+        -1.2790377912192636,
+        4.528262091710413,
+        -0.5477064470231461
+      ],
+      "rotation_euler": [
+        -0.009324058573288108,
+        -0.0007816603643409081,
+        -0.7688084625580947
+      ],
+      "rotation_euler_deg": [
+        -0.5342292041821803,
+        -0.04478583988939227,
+        -44.049480158520396
+      ],
+      "scale": [
+        0.32650899127972544,
+        0.32650899127972544,
+        0.32650899127972544
+      ],
+      "class": "table lamp"
+    },
+    {
+      "id": "obj_2",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/2.glb",
+      "location": [
+        1.2106598719902841,
+        5.394469121329981,
+        0.4033099165841627
+      ],
+      "rotation_euler": [
+        -0.025116836282026878,
+        0.007459566389449224,
+        0.0007491675247258617
+      ],
+      "rotation_euler_deg": [
+        -1.4390887136811983,
+        0.4274016711130823,
+        0.04292413731505462
+      ],
+      "scale": [
+        0.2906011422696264,
+        0.2906011422696264,
+        0.2906011422696264
+      ],
+      "class": "picture frame"
+    },
+    {
+      "id": "obj_3",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/3.glb",
+      "location": [
+        -1.547155933779203,
+        4.5890460512916285,
+        0.41423029854903415
+      ],
+      "rotation_euler": [
+        -0.0035245041345489114,
+        -0.0006545173489427292,
+        -2.9717454903373075
+      ],
+      "rotation_euler_deg": [
+        -0.20193921178606147,
+        -0.03750108171250978,
+        -170.26847438336307
+      ],
+      "scale": [
+        0.2139585728144644,
+        0.2139585728144644,
+        0.2139585728144644
+      ],
+      "class": "picture frame"
+    },
+    {
+      "id": "obj_4",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/4.glb",
+      "location": [
+        0.22242420174498745,
+        3.852674558192945,
+        -0.9230744932890461
+      ],
+      "rotation_euler": [
+        -0.037445034953592415,
+        0.00932039552668984,
+        0.32827327770806
+      ],
+      "rotation_euler_deg": [
+        -2.145442466560692,
+        0.5340193270719399,
+        18.808673339597846
+      ],
+      "scale": [
+        1.0880625953005796,
+        1.0880625953005796,
+        1.0880625953005796
+      ],
+      "class": "pillow"
+    },
+    {
+      "id": "obj_7",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/7.glb",
+      "location": [
+        1.2528440662207971,
+        4.546182621141758,
+        -0.9201803524724244
+      ],
+      "rotation_euler": [
+        -0.005365856385850298,
+        0.003192472901539567,
+        0.3507110367235613
+      ],
+      "rotation_euler_deg": [
+        -0.3074409243825435,
+        0.1829152234681012,
+        20.094262232917686
+      ],
+      "scale": [
+        0.30742730430565224,
+        0.30742730430565224,
+        0.30742730430565224
+      ],
+      "class": "nightstand side table"
+    },
+    {
+      "id": "obj_8",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/8.glb",
+      "location": [
+        -1.064080095955362,
+        4.554316836233331,
+        -1.304475609600504
+      ],
+      "rotation_euler": [
+        -0.008135313222408902,
+        0.0007156166616737458,
+        0.3292091386230014
+      ],
+      "rotation_euler_deg": [
+        -0.4661191126610037,
+        0.04100181446314697,
+        18.862294220235242
+      ],
+      "scale": [
+        0.3162238426626401,
+        0.3162238426626401,
+        0.3162238426626401
+      ],
+      "class": "nightstand dresser drawer"
+    },
+    {
+      "id": "obj_9",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/9.glb",
+      "location": [
+        -0.2837557010797352,
+        5.153354256137185,
+        0.2836679629784972
+      ],
+      "rotation_euler": [
+        -0.013128747605936963,
+        0.0018717859283656768,
+        0.3424109982367618
+      ],
+      "rotation_euler_deg": [
+        -0.7522218281126717,
+        0.10724543384732992,
+        19.618705057827924
+      ],
+      "scale": [
+        1.2870896387190076,
+        1.2870896387190076,
+        1.2870896387190076
+      ],
+      "class": "window"
+    },
+    {
+      "id": "obj_12",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/12.glb",
+      "location": [
+        0.3845454457211261,
+        5.327168389800474,
+        0.2582872915647863
+      ],
+      "rotation_euler": [
+        -0.005807034325993943,
+        0.0026997849123830964,
+        0.21217641801792692
+      ],
+      "rotation_euler_deg": [
+        -0.33271855836704956,
+        0.15468628107264817,
+        12.156813264630728
+      ],
+      "scale": [
+        0.7058873541797547,
+        0.7058873541797547,
+        0.7058873541797547
+      ],
+      "class": "window"
+    },
+    {
+      "id": "obj_13",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/13.glb",
+      "location": [
+        1.0140479555547324,
+        4.939108316562325,
+        -0.7559243606773081
+      ],
+      "rotation_euler": [
+        -0.03431622732687112,
+        -0.03272052774026335,
+        -0.8180963278402675
+      ],
+      "rotation_euler_deg": [
+        -1.966174994641218,
+        -1.8747481429578228,
+        -46.87346682039828
+      ],
+      "scale": [
+        0.18098288842103336,
+        0.18098288842103336,
+        0.18098288842103336
+      ],
+      "class": "bag book"
+    },
+    {
+      "id": "obj_14",
+      "mesh_path": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/inputs/object/14.glb",
+      "location": [
+        1.05580678170295,
+        4.891666957374983,
+        -0.8257597352775453
+      ],
+      "rotation_euler": [
+        -0.04269716288659686,
+        -0.013070749913123292,
+        -0.2551753228558514
+      ],
+      "rotation_euler_deg": [
+        -2.4463672305846154,
+        -0.748898805092952,
+        -14.620469035528458
+      ],
+      "scale": [
+        0.18761410266099626,
+        0.18761410266099626,
+        0.18761410266099626
+      ],
+      "class": "book"
+    }
+  ],
+  "point_cloud": {
+    "ply_path": "inputs/pointmap_xz.ply",
+    "axis_remap": "forward=Z,up=Y",
+    "decimate_ratio": 1.0,
+    "visible": false,
+    "world_scale_applied": 1.9912087600934951,
+    "name": "PointCloud_XZ"
+  },
+  "stage": {
+    "polygon_vertices": [
+      [
+        -1.9,
+        -0.2
+      ],
+      [
+        1.9,
+        -0.2
+      ],
+      [
+        1.9,
+        5.85
+      ],
+      [
+        -1.9,
+        5.85
+      ]
+    ],
+    "polygon_centroid_xy": [
+      0.0,
+      2.825
+    ],
+    "floor_z": -1.628224,
+    "ceiling_z": 1.163014,
+    "wall_thickness": 0.25,
+    "floor_thickness": 0.3,
+    "ceiling_thickness": 0.3,
+    "wall_objects": [
+      "Wall_01",
+      "Wall_02",
+      "Wall_03",
+      "Wall_04"
+    ],
+    "wall_edges": [
+      {
+        "from": 0,
+        "to": 1,
+        "object": "Wall_01",
+        "orientation": "unspecified"
+      },
+      {
+        "from": 1,
+        "to": 2,
+        "object": "Wall_02",
+        "orientation": "wall_mount",
+        "wall_mount_evidence": [
+          {
+            "id": "obj_2",
+            "class": "picture frame",
+            "dist_m": 0.397
+          }
+        ]
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "object": "Wall_03",
+        "orientation": "wall_mount",
+        "wall_mount_evidence": [
+          {
+            "id": "obj_2",
+            "class": "picture frame",
+            "dist_m": 0.435
+          },
+          {
+            "id": "obj_9",
+            "class": "window",
+            "dist_m": 0.129
+          },
+          {
+            "id": "obj_12",
+            "class": "window",
+            "dist_m": 0.407
+          }
+        ]
+      },
+      {
+        "from": 3,
+        "to": 0,
+        "object": "Wall_04",
+        "orientation": "wall_mount",
+        "wall_mount_evidence": [
+          {
+            "id": "obj_3",
+            "class": "picture frame",
+            "dist_m": 0.14
+          },
+          {
+            "id": "obj_9",
+            "class": "window",
+            "dist_m": 0.357
+          }
+        ]
+      }
+    ],
+    "open_edges": [],
+    "openings": [],
+    "camera_xy": [
+      0.0,
+      0.0
+    ],
+    "camera_source": "blender_camera",
+    "source_frame": "blend_world",
+    "buffer_m": 0.1,
+    "rect_angle_deg": 0.0,
+    "generator": "stage2-sub-pointmap-to-separable-stage"
+  },
+  "lighting": [
+    {
+      "name": "Area_Fill",
+      "type": "AREA",
+      "collection": "Lighting_Env",
+      "location": [
+        0.0,
+        2.825,
+        1.363014
+      ],
+      "rotation_euler": [
+        3.141593,
+        0.0,
+        0.0
+      ],
+      "energy": 200.0,
+      "color": [
+        0.96,
+        0.98,
+        1.0
+      ],
+      "size": 3.0,
+      "spread_deg": null,
+      "shadow_soft_size": 0.0,
+      "cycles": {
+        "cast_shadow": true
+      }
+    },
+    {
+      "name": "Class_Light_obj_1",
+      "type": "POINT",
+      "collection": "Lighting_Env",
+      "location": [
+        -1.279038,
+        4.528262,
+        -0.547706
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "energy": 200.0,
+      "color": [
+        1.0,
+        0.9,
+        0.75
+      ],
+      "size": null,
+      "spread_deg": null,
+      "shadow_soft_size": 0.0,
+      "cycles": {
+        "cast_shadow": true
+      }
+    },
+    {
+      "name": "Practical_L",
+      "type": "POINT",
+      "collection": "Lighting_Env",
+      "location": [
+        -1.29,
+        3.48,
+        0.445643
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "energy": 200.0,
+      "color": [
+        1.0,
+        0.95,
+        0.9
+      ],
+      "size": null,
+      "spread_deg": null,
+      "shadow_soft_size": 0.0,
+      "cycles": {
+        "cast_shadow": true
+      }
+    },
+    {
+      "name": "Practical_R",
+      "type": "POINT",
+      "collection": "Lighting_Env",
+      "location": [
+        1.29,
+        2.17,
+        0.445643
+      ],
+      "rotation_euler": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "energy": 200.0,
+      "color": [
+        1.0,
+        0.95,
+        0.9
+      ],
+      "size": null,
+      "spread_deg": null,
+      "shadow_soft_size": 0.0,
+      "cycles": {
+        "cast_shadow": true
+      }
+    }
+  ],
+  "world": {
+    "mode": "flat",
+    "color": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "strength": 0.0
+  },
+  "stage_materials": {
+    "ceiling": {
+      "base_color_linear": [
+        0.8468732237815857,
+        0.7991027235984802,
+        0.7083757519721985,
+        1.0
+      ],
+      "base_color_srgb_hex": "#EDE7DB",
+      "roughness": 0.8999999761581421,
+      "metallic": 0.0,
+      "specular_ior_level": 0.5,
+      "normal_strength": 1.0,
+      "texture_image_path": null
+    },
+    "floor": {
+      "base_color_linear": [
+        0.3324515223503113,
+        0.14702726900577545,
+        0.04817182570695877,
+        1.0
+      ],
+      "base_color_srgb_hex": "#9C6B3E",
+      "roughness": 0.550000011920929,
+      "metallic": 0.0,
+      "specular_ior_level": 0.5,
+      "normal_strength": 1.0,
+      "texture_image_path": null
+    },
+    "walls.Wall": {
+      "base_color_linear": [
+        0.7991027235984802,
+        0.7758222222328186,
+        0.7230551242828369,
+        1.0
+      ],
+      "base_color_srgb_hex": "#E7E4DD",
+      "roughness": 0.8500000238418579,
+      "metallic": 0.0,
+      "specular_ior_level": 0.5,
+      "normal_strength": 1.0,
+      "texture_image_path": null
+    }
+  },
+  "render": {
+    "engine": "CYCLES",
+    "samples": 512,
+    "resolution": [
+      1024,
+      682
+    ],
+    "view_transform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "exposure": 0.2,
+    "clamp_indirect": 5.0,
+    "denoiser": "OPENIMAGEDENOISE"
+  },
+  "compositor": {
+    "glare": {
+      "glare_type": "FOG_GLOW",
+      "mix": -0.92,
+      "threshold": 1.0,
+      "size": 6
+    },
+    "lens_distortion": {
+      "distortion": 0.006,
+      "dispersion": 0.002
+    }
+  }
+}

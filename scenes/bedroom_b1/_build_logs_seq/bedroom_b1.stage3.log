@@ -1,0 +1,22 @@
+Verified — **`step: done | status: ok`**. Stage 3 is complete.
+
+## Summary
+
+The full Stage 3 pipeline ran end-to-end on `bedroom_b1` (num_max_iter=10):
+
+| Step | Result |
+|---|---|
+| **Scene-analyze-prepare** | 3 planning JSONs generated (4 relation groups: G1 frames, G2 windows, G3 lamp+nightstand, G4 bag+book+nightstand) |
+| **Scene-refiner** | 9 ops merged (heuristic 5 + graph_tool 7 → 9 final), applied |
+| **Planner-review** (Opus) | revised operation plan written |
+| **Apply-revised-plan** | revised plan applied to working blend |
+| **Validation** (Opus) | flagged **G4** as needing island refinement |
+| **Island-refiner** | G4 refined over 10 iters — bag + book placed side-by-side on nightstand (gap 0.035m, both facing anchor, facing_ok 2/2) |
+| **Merge-back** | → `stage3-scene.blend` |
+| **Final render** | 5 views |
+
+**Outputs:**
+- Final blend: `blend/stage3-scene.blend` (27.6 MB)
+- 5 renders in `render/final/`: perspective, bev, wide, topcorner, topcorner_opposite
+
+`islands_completed: [G4]`, `islands_failed: []`. Total wall-clock ~16 min. The orchestrator required several manual nudges to continue its `--resume` loop between steps rather than running straight through — worth noting if this recurs.

@@ -1,0 +1,18 @@
+{
+  "iter": 4,
+  "members": {
+    "obj_13": {"delta_xyz": [0.10, 0.0, 0.0], "delta_yaw_deg": 0.0},
+    "obj_14": {"delta_xyz": [-0.10, 0.0, 0.0], "delta_yaw_deg": 90.0}
+  },
+  "converged": false,
+  "final": false,
+  "reason_summary": "Spread obj_13 right and obj_14 left for wider separation; rotate obj_14 by 90deg to fix OFF_90 facing toward anchor",
+  "_island_meta": {
+    "model": "opus",
+    "image_sha256": "44b7aacff00aac36a6544fc7dd9d4bfe8724c0b33f573f75813df6176698475c",
+    "generated_by": "stage3-island-refiner subagent",
+    "mode": "island_iter",
+    "iter": 4,
+    "timestamp_utc": "2026-06-09T07:02:12Z"
+  }
+}

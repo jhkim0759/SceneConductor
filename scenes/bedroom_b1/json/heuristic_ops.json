@@ -1,0 +1,93 @@
+{
+  "operation_list": [
+    {
+      "action": "attach",
+      "anchor_obj": "Floor",
+      "moving_obj": "obj_7",
+      "relation": "on",
+      "reason": "force floor-grounding obj_7 (LLM ground_objects; object_state attached_to=floor; class='nightstand side table' matched FLOOR_CLASSES)",
+      "criteria_used": [
+        "environment_attachment"
+      ],
+      "priority": 3,
+      "confidence": 0.9,
+      "requires_planner_review": false,
+      "source": "heuristic"
+    },
+    {
+      "action": "attach",
+      "anchor_obj": "Floor",
+      "moving_obj": "obj_8",
+      "relation": "on",
+      "reason": "force floor-grounding obj_8 (LLM ground_objects; object_state attached_to=floor; class='nightstand dresser drawer' matched FLOOR_CLASSES)",
+      "criteria_used": [
+        "environment_attachment"
+      ],
+      "priority": 3,
+      "confidence": 0.9,
+      "requires_planner_review": false,
+      "source": "heuristic"
+    },
+    {
+      "action": "attach",
+      "anchor_obj": "obj_8",
+      "moving_obj": "obj_1",
+      "relation": "on",
+      "reason": "relation_graph.json G3 'Lamp on Left Nightstand' edge_type=on_top_of: obj_1 rests on anchor obj_8",
+      "criteria_used": [
+        "support_relationship"
+      ],
+      "priority": 4,
+      "confidence": 0.8,
+      "requires_planner_review": false,
+      "source": "heuristic"
+    },
+    {
+      "action": "attach",
+      "anchor_obj": "obj_7",
+      "moving_obj": "obj_13",
+      "relation": "on",
+      "reason": "relation_graph.json G4 'Bag and Book on Right Nightstand' edge_type=on_top_of: obj_13 rests on anchor obj_7",
+      "criteria_used": [
+        "support_relationship"
+      ],
+      "priority": 4,
+      "confidence": 0.8,
+      "requires_planner_review": false,
+      "source": "heuristic"
+    },
+    {
+      "action": "attach",
+      "anchor_obj": "obj_7",
+      "moving_obj": "obj_14",
+      "relation": "on",
+      "reason": "relation_graph.json G4 'Bag and Book on Right Nightstand' edge_type=on_top_of: obj_14 rests on anchor obj_7",
+      "criteria_used": [
+        "support_relationship"
+      ],
+      "priority": 4,
+      "confidence": 0.8,
+      "requires_planner_review": false,
+      "source": "heuristic"
+    }
+  ],
+  "covered_objects": [
+    "obj_1",
+    "obj_13",
+    "obj_14",
+    "obj_7",
+    "obj_8"
+  ],
+  "heuristic_stats": {
+    "mesh_group_scale_ops": 0,
+    "yaw_snap_ops": 0,
+    "yaw_snap_ceiling_ops": 0,
+    "yaw_snap_ceiling_meshgroups": 0,
+    "floor_attach_ops": 2,
+    "ceiling_attach_ops": 0,
+    "support_attach_ops": 3,
+    "polygon_clamp_ops": 0,
+    "polygon_clamp_walls_processed": 0,
+    "polygon_clamp_attached_edges_skipped": 0
+  }
+}

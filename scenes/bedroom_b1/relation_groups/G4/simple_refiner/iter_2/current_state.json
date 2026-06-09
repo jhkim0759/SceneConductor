@@ -1,0 +1,31 @@
+{
+  "iter": 2,
+  "frame": "canonical",
+  "_note": "Absolute object poses after iter N apply. position in metres, yaw_deg is rotation about Z.",
+  "obj_positions": {
+    "obj_13": {
+      "position": [
+        0.208303,
+        0.186957,
+        0.534057
+      ],
+      "yaw_deg": 0.0229
+    },
+    "obj_14": {
+      "position": [
+        -0.368763,
+        0.188084,
+        0.528735
+      ],
+      "yaw_deg": 0.2802
+    },
+    "obj_7": {
+      "position": [
+        -0.0,
+        0.0,
+        -0.0
+      ],
+      "yaw_deg": 0.0
+    }
+  }
+}

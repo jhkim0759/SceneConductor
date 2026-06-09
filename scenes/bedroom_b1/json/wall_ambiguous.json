@@ -1,0 +1,15 @@
+{
+  "ambiguous": [
+    {
+      "obj": "obj_2",
+      "candidates": [
+        "Wall_03",
+        "Wall_02"
+      ],
+      "dists": [
+        0.4555,
+        0.6893
+      ]
+    }
+  ]
+}

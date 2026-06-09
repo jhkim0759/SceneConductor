@@ -1,0 +1,41 @@
+{
+  "groups": [
+    {
+      "group_id": "G1",
+      "group_dir": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/relation_groups/G1",
+      "members": [
+        "obj_3"
+      ],
+      "anchor_id": "obj_2",
+      "reason": "abstract anchor 'back_wall' resolved via bbox pick_anchor (all groups selected \u2014 no planner-selection step in new pipeline)"
+    },
+    {
+      "group_id": "G2",
+      "group_dir": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/relation_groups/G2",
+      "members": [
+        "obj_12"
+      ],
+      "anchor_id": "obj_9",
+      "reason": "abstract anchor 'back_wall' resolved via bbox pick_anchor (all groups selected \u2014 no planner-selection step in new pipeline)"
+    },
+    {
+      "group_id": "G3",
+      "group_dir": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/relation_groups/G3",
+      "members": [
+        "obj_1"
+      ],
+      "anchor_id": "obj_8",
+      "reason": "anchor from relation_graph.json (obj_* direct)"
+    },
+    {
+      "group_id": "G4",
+      "group_dir": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/relation_groups/G4",
+      "members": [
+        "obj_13",
+        "obj_14"
+      ],
+      "anchor_id": "obj_7",
+      "reason": "anchor from relation_graph.json (obj_* direct)"
+    }
+  ]
+}

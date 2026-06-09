@@ -1,0 +1,97 @@
+{
+  "operation_list": [
+    {
+      "action": "attach",
+      "anchor_obj": "obj_8",
+      "moving_obj": "obj_1",
+      "relation": "on",
+      "reason": "Lamp obj_1 rests on left nightstand obj_8 (on_top_of G3; object_state stacking base=obj_8 top=[obj_1]); confirmed visually in reference.",
+      "priority": 3,
+      "source": "graph_tool"
+    },
+    {
+      "action": "attach",
+      "anchor_obj": "obj_7",
+      "moving_obj": "obj_13",
+      "relation": "on",
+      "reason": "Bag obj_13 rests on right nightstand obj_7 (on_top_of G4; object_state stacking base=obj_7).",
+      "priority": 3,
+      "source": "graph_tool"
+    },
+    {
+      "action": "attach",
+      "anchor_obj": "obj_7",
+      "moving_obj": "obj_14",
+      "relation": "on",
+      "reason": "Book obj_14 rests on right nightstand obj_7 (on_top_of G4; object_state stacking base=obj_7).",
+      "priority": 3,
+      "source": "graph_tool"
+    },
+    {
+      "action": "attach",
+      "anchor_obj": "Floor",
+      "moving_obj": "obj_7",
+      "relation": "on",
+      "reason": "Force floor-grounding right nightstand obj_7 (object_state attached_to=floor; class nightstand).",
+      "priority": 3,
+      "source": "heuristic"
+    },
+    {
+      "action": "attach",
+      "anchor_obj": "Floor",
+      "moving_obj": "obj_8",
+      "relation": "on",
+      "reason": "Force floor-grounding left nightstand obj_8 (object_state attached_to=floor; class nightstand).",
+      "priority": 3,
+      "source": "heuristic"
+    },
+    {
+      "action": "attach_to_wall",
+      "wall_obj": "Wall_03",
+      "moving_obj": "obj_12",
+      "wall_ambiguous": false,
+      "reason": "Window obj_12 mounted on back wall (attached_to=wall); nearest wall Wall_03; matches two side-by-side windows on the back wall in reference.",
+      "priority": 5,
+      "source": "graph_tool",
+      "t_along_m": 1.5155
+    },
+    {
+      "action": "attach_to_wall",
+      "wall_obj": "Wall_03",
+      "moving_obj": "obj_2",
+      "wall_ambiguous": true,
+      "reason": "Picture frame obj_2 (upper-right of reference) appears front-facing/un-foreshortened, consistent with the back wall (Wall_03) rather than the right wall (Wall_02); distance also favors Wall_03 (0.455 vs 0.689). Kept Wall_03.",
+      "priority": 5,
+      "source": "graph_tool",
+      "t_along_m": 0.6893
+    },
+    {
+      "action": "attach_to_wall",
+      "wall_obj": "Wall_04",
+      "moving_obj": "obj_3",
+      "wall_ambiguous": false,
+      "reason": "Picture frame obj_3 (upper-left of reference) mounted on the left wall (Wall_04); nearest wall 0.353m; matches reference.",
+      "priority": 5,
+      "source": "graph_tool",
+      "t_along_m": 1.261
+    },
+    {
+      "action": "attach_to_wall",
+      "wall_obj": "Wall_03",
+      "moving_obj": "obj_9",
+      "wall_ambiguous": false,
+      "reason": "Window obj_9 mounted on back wall (attached_to=wall); nearest wall Wall_03; flush wall-attach also pulls it back out of the bed, resolving the obj_4<->obj_9 collision.",
+      "priority": 5,
+      "source": "graph_tool",
+      "t_along_m": 2.1838
+    }
+  ],
+  "review_notes": "Carried forward all 9 heuristic ops unchanged; no deletions and no wall reassignments were needed. Ambiguous picture frame obj_2 (candidates Wall_03/Wall_02): the upper-right framed picture in the reference appears front-facing rather than foreshortened, which matches the back wall (Wall_03); distance also favored Wall_03 (0.455 vs 0.689), so Wall_03 was kept. Same-wall window pair G2 (obj_9, obj_12) was inspected for size consistency: z-spread is fine (0.026 m), but the scale-spread is large because the two windows use fundamentally different meshes (base widths 2.57 m vs 0.77 m). Aligning the uniform scale parameter would NOT equalize their visual size and risks corrupting proportions, so update_size was intentionally NOT emitted; the flush wall-attach (preserve_rotation=False) additionally seats obj_9 back against Wall_03 and resolves its protrusion-collision with the bed (obj_4). Ghost-duplicate scan: obj_7/obj_8 (~2.3 m apart) and obj_9/obj_12 (~0.68 m apart) are genuinely distinct pairs, not duplicates. Off-axis-facing, missing-support, and wall-discovery scans found no gaps: lamp->obj_8 and bag/book->obj_7 supports are already covered, no additional wall-mounted items are visible, and the bed mass (obj_4, captured under class 'pillow') already rests at floor level. No new vision-evident ops required.",
+  "_planner_meta": {
+    "model": "opus",
+    "image_sha256": "3bef35783a94dbf41697c8fb3ea2dedff0406e11586497d33fde2a3dfce880c1",
+    "generated_by": "run_stage3_planner_review.py",
+    "mode": "planner_review",
+    "timestamp_utc": "2026-06-09T06:58:06Z"
+  }
+}

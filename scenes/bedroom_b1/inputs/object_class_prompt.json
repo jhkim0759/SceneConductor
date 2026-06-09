@@ -1,0 +1,21 @@
+{
+  "prompt": "bed. pillow. bedspread. bed skirt. nightstand. table lamp. side table. window. curtain. picture frame. bag. book. dresser drawer.",
+  "classes": [
+    "bed",
+    "pillow",
+    "bedspread",
+    "bed skirt",
+    "nightstand",
+    "table lamp",
+    "side table",
+    "window",
+    "curtain",
+    "picture frame",
+    "bag",
+    "book",
+    "dresser drawer"
+  ],
+  "model": "claude-opus-4-6",
+  "image": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/image.png",
+  "raw_response": "bed . pillow . bedspread . bed skirt . nightstand . table lamp . side table . window . curtain . picture frame . bag . book . dresser drawer"
+}

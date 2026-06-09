@@ -1,0 +1,18 @@
+{
+  "iter": 9,
+  "members": {
+    "obj_13": {"delta_xyz": [0.01, 0.0, 0.0], "delta_yaw_deg": 0.0},
+    "obj_14": {"delta_xyz": [-0.01, 0.0, 0.0], "delta_yaw_deg": 0.0}
+  },
+  "converged": false,
+  "final": false,
+  "reason_summary": "Micro-nudge to maintain slight separation between bag and book on nightstand; layout is stable",
+  "_island_meta": {
+    "model": "opus",
+    "image_sha256": "44b7aacff00aac36a6544fc7dd9d4bfe8724c0b33f573f75813df6176698475c",
+    "generated_by": "stage3-island-refiner subagent",
+    "mode": "island_iter",
+    "iter": 9,
+    "timestamp_utc": "2026-06-09T07:04:51Z"
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "group_name": "G1",
+  "anchor_id": "obj_2",
+  "convention": "single_rigid_xform",
+  "transform_note": "world = M_anchor @ canonical  (uniform per island).  M_anchor = Translate(anchor_world_origin) @ Euler(anchor_world_rotation_euler).  Scale is NOT part of the rigid xform; each object's scale is preserved as-is.",
+  "anchor_world_origin": [
+    1.2107000350952148,
+    5.809631824493408,
+    0.4033099114894867
+  ],
+  "anchor_world_rotation_euler": [
+    -0.02511683665215969,
+    0.007459566462785006,
+    0.0
+  ],
+  "M_anchor_4x4": [
+    [
+      0.9999721646308899,
+      -0.0001873392757261172,
+      0.007457144558429718,
+      1.2107000350952148
+    ],
+    [
+      0.0,
+      0.9996845722198486,
+      0.02511419542133808,
+      5.809631824493408
+    ],
+    [
+      -0.007459497079253197,
+      -0.02511349692940712,
+      0.9996567964553833,
+      0.4033099114894867
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "M_inv_4x4": [
+    [
+      0.9999721646308899,
+      1.4551915228366852e-11,
+      -0.007459497544914484,
+      -1.2076579332351685
+    ],
+    [
+      -0.00018733926117420197,
+      0.9996845722198486,
+      -0.02511349692940712,
+      -5.7974443435668945
+    ],
+    [
+      0.007457144092768431,
+      0.02511419542133808,
+      0.9996567368507385,
+      -0.5581040978431702
+    ],
+    [
+      -0.0,
+      -0.0,
+      -0.0,
+      1.0
+    ]
+  ],
+  "members": {
+    "obj_3": {
+      "world_location": [
+        -1.6659455299377441,
+        4.589000225067139,
+        0.4142302870750427
+      ],
+      "world_rotation_euler": [
+        -0.0035245041362941265,
+        -0.0006545173237100244,
+        3.1415927410125732
+      ],
+      "world_scale": [
+        0.21395857632160187,
+        0.21395857632160187,
+        0.21395857632160187
+      ],
+      "canonical_location": [
+        -2.8766469955444336,
+        -1.2199825048446655,
+        -0.041190147399902344
+      ],
+      "canonical_rotation_euler": [
+        -0.028641918674111366,
+        0.006802904885262251,
+        3.1414217948913574
+      ],
+      "canonical_scale": [
+        0.21395857632160187,
+        0.21395857632160187,
+        0.21395857632160187
+      ],
+      "is_anchor": false
+    },
+    "obj_2": {
+      "world_location": [
+        1.2107000350952148,
+        5.809631824493408,
+        0.4033099114894867
+      ],
+      "world_rotation_euler": [
+        -0.02511683665215969,
+        0.007459566462785006,
+        0.0
+      ],
+      "world_scale": [
+        0.29060113430023193,
+        0.29060113430023193,
+        0.29060113430023193
+      ],
+      "canonical_location": [
+        -1.2354853140550404e-07,
+        -3.3821561373770237e-07,
+        -2.514570951461792e-08
+      ],
+      "canonical_rotation_euler": [
+        -3.205968823749572e-11,
+        -0.0,
+        0.0
+      ],
+      "canonical_scale": [
+        0.29060113430023193,
+        0.29060113430023193,
+        0.29060113430023193
+      ],
+      "is_anchor": true
+    }
+  },
+  "island_blend": "/home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1/relation_groups/G1/island.blend",
+  "edge_type": "mounted_on_same_wall",
+  "name": "Back Wall Picture Frames",
+  "evidence": "obj_2 (picture frame, loc Y=5.39) and obj_3 (picture frame, loc Y=4.59) both have near-zero depth dimensions (0.030m, 0.016m) confirming wall mounting, and both appear on the back wall of the bedroom (back wall at Y~6.10). Both are attached_to=wall per object_state.json. Both are visible on the back/side walls in the reference image."
+}
