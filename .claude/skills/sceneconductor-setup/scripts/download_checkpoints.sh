@@ -78,15 +78,27 @@ get "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth" \
     "$CKPT/grounded-sam/sam_vit_h_4b8939.pth"
 
 # ---------------------------------------------------------------------------
-# 2. GALP (public HF repo, already laid out under checkpoints/galp/*)
+# 2. GALP (public HF repo). NOTE: the repo stores the weights directly under
+#    `checkpoints/` (no `galp/` subdir), but the pipeline expects them at
+#    checkpoints/galp/. Download to a temp dir, then move them into place.
 # ---------------------------------------------------------------------------
 step "GALP checkpoints -> checkpoints/galp/  (HF: WopperSet/SceneConductor)"
 if [ -s "$CKPT/galp/checkpoint.pt" ] && [ "$FORCE" = false ]; then
     echo "[skip] checkpoints/galp/checkpoint.pt exists"
 else
     ensure_hf
-    HF download WopperSet/SceneConductor --include "checkpoints/galp/*" --local-dir "$REPO_ROOT" \
-        && echo "[OK] GALP weights" || echo "[ERROR] GALP download failed"
+    GALP_TMP="$CKPT/.galp-download"
+    rm -rf "$GALP_TMP"
+    if HF download WopperSet/SceneConductor --include "checkpoints/*" --local-dir "$GALP_TMP"; then
+        mkdir -p "$CKPT/galp"
+        mv "$GALP_TMP/checkpoints/"* "$CKPT/galp/" 2>/dev/null
+        rm -rf "$GALP_TMP"
+        [ -s "$CKPT/galp/checkpoint.pt" ] \
+            && echo "[OK] GALP weights -> checkpoints/galp/" \
+            || echo "[ERROR] GALP download landed but checkpoints/galp/checkpoint.pt is missing"
+    else
+        echo "[ERROR] GALP download failed"
+    fi
 fi
 
 # ---------------------------------------------------------------------------

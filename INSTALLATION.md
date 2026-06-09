@@ -127,11 +127,16 @@ wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth \
 
 ### 5.2 GALP (Hugging Face, public)
 
-Already laid out under `checkpoints/galp/` in the repo
-[`WopperSet/SceneConductor`](https://huggingface.co/WopperSet/SceneConductor):
+The repo [`WopperSet/SceneConductor`](https://huggingface.co/WopperSet/SceneConductor)
+stores the GALP weights directly under `checkpoints/` (no `galp/` subdir), while the
+pipeline expects them at `checkpoints/galp/`. Download to a temp dir, then move them
+into place:
 
 ```bash
-hf download WopperSet/SceneConductor --include "checkpoints/galp/*" --local-dir "$PROJECT_ROOT"
+hf download WopperSet/SceneConductor --include "checkpoints/*" --local-dir /tmp/galp-dl
+mkdir -p "$PROJECT_ROOT/checkpoints/galp"
+mv /tmp/galp-dl/checkpoints/* "$PROJECT_ROOT/checkpoints/galp/"
+rm -rf /tmp/galp-dl
 ```
 
 ### 5.3 SAM 3D Objects (Hugging Face, **gated**)

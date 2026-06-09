@@ -10,3 +10,4 @@
 [submodule "submodules/GALP"]
 	path = submodules/GALP
 	url = https://github.com/jhkim0759/GALP.git
+	branch = main
