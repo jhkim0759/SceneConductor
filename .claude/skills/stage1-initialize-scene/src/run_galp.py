@@ -20,6 +20,7 @@ Outputs:
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import logging
 import os
@@ -149,12 +150,21 @@ def load_models(ckpt_path: Path, device: torch.device):
     log.info("MoGe loaded")
 
     # --- ss_generator + trained checkpoint ---
-    ss_generator, _, _ = init_ss_generator(
-        ss_generator_config,
-        None,
-        device=device,
-        resolution=voxel_res,
-    )
+    # init_ss_generator is aliased to GALP's init_ss_generator_v1_4, which has
+    # two historical signatures that differ only in their (unused) 2nd arg:
+    #   vendored build : (config_path, ckpt_path, workspace_dir="", device=..., resolution=...)
+    #   submodule build: (config_path, device=..., resolution=...)
+    # Both bodies ignore ckpt_path (weights are loaded externally just below),
+    # so call compatibly with whichever signature is present. This keeps a fresh
+    # `git clone` (which pulls the GALP submodule) working without edits.
+    if "ckpt_path" in inspect.signature(init_ss_generator).parameters:
+        ss_generator, _, _ = init_ss_generator(
+            ss_generator_config, None, device=device, resolution=voxel_res
+        )
+    else:
+        ss_generator, _, _ = init_ss_generator(
+            ss_generator_config, device=device, resolution=voxel_res
+        )
     log.info("Loading trained checkpoint: %s", ckpt_path)
     ckpt = torch.load(str(ckpt_path), map_location=device, weights_only=False)
     ss_generator.load_state_dict(strip_module_prefix(ckpt), strict=True)

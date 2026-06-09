@@ -36,13 +36,30 @@ The pipeline runs in three stages, shown above.
 > - 💻 **Terminal** — run in your normal shell (e.g. `./setup.sh`, `git`, `conda`).
 > - 💬 **Claude Code prompt** — type *inside* the Claude Code CLI, after you run `claude`. These are the `/slash-commands`.
 
-### 💻 Step 1 — Set everything up (Terminal)
+### ✅ Step 1 (recommended) — one-skill setup
 
-Run these commands in order from your shell.
+Clone, launch Claude Code, and run the **`sceneconductor-setup`** skill. It provisions the whole pipeline end to end — submodules → Blender 4.2.1 → all five conda envs → all model checkpoints → a PASS/FAIL verification — so you go straight from a bare clone to a runnable scene.
+
+```bash
+# Terminal
+git clone --recursive https://github.com/jhkim0759/SceneConductor.git SceneConductor
+cd SceneConductor
+claude
+```
+```text
+# Claude Code prompt — provisions AND validates everything
+/sceneconductor-setup
+```
+
+Under the hood it patches the GroundingDINO CUDA source for the pinned PyTorch (so `groundingdino._C` actually builds — the #1 fresh-clone failure), downloads GroundedSAM / GALP / SAM3D / Qwen weights, and wires the SAM3D symlink. **SAM 3D Objects is a gated Hugging Face repo** — if its download fails, request access at https://huggingface.co/facebook/sam-3d-objects, create a token, then re-run with `HF_TOKEN=hf_xxx`. When the audit prints `RESULT: PASS`, jump to Step 2.
+
+### 💻 Step 1 (manual alternative) — set everything up in the Terminal
+
+Prefer the one-skill setup above. These are the equivalent manual steps if you'd rather drive it yourself.
 
 ```bash
 # 1. Clone with submodules
-git clone --recursive https://github.com/example/SceneConductor.git SceneConductor
+git clone --recursive https://github.com/jhkim0759/SceneConductor.git SceneConductor
 cd SceneConductor
 ```
 
@@ -185,7 +202,7 @@ SceneConductor/
 │   ├── rules/                     # shared norm files
 │   └── settings.json
 ├── submodules/
-│   ├── GALP/                      # vendored (no upstream)
+│   ├── GALP/                      # git submodule (jhkim0759/GALP)
 │   ├── Grounded-SAM/              # git submodule
 │   ├── SAM3D/                     # git submodule
 │   └── Qwen3.6/                   # git submodule
@@ -223,7 +240,7 @@ SceneConductor/
 3. **🧱 An env failed to build in `./setup.sh`** — the summary marks it. Rebuild just that one, e.g. 💻 `./setup.sh --grounded-sam --force`. A CUDA build error usually means `CUDA_HOME` isn't pointing at a real toolkit.
 4. **💥 CUDA OOM during Stage 1 SAM3D** — the SAM3D post-process peaks at ~30 GiB. Close other GPU processes, pin a larger device with `--gpu N`, or use a higher-VRAM card.
 5. **⏭️ "Stage skipped — already complete"** — the orchestrator caches per-stage completion. Re-run with `--force` to rebuild from Stage 1.
-6. **📂 Submodule directory empty after clone** — you cloned without `--recursive`. Run 💻 `git submodule update --init --recursive`. The `submodules/GALP` directory is vendored and is populated regardless.
+6. **📂 Submodule directory empty after clone** — you cloned without `--recursive`. Run 💻 `git submodule update --init --recursive` (this populates all four submodules, GALP included).
 
 ## 🗺️ Roadmap
 

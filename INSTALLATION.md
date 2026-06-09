@@ -8,11 +8,27 @@ Throughout this document, `$PROJECT_ROOT` refers to the directory where you clon
 
 ## 0. Quick Start (TL;DR)
 
-If you just want it working, copy‑paste this. It assumes Linux x86_64, an NVIDIA GPU (CUDA 11.8+), and `conda`/`miniconda` already installed. Each step is explained in the sections below.
+**Easiest — one skill does everything.** Clone, launch Claude Code, and run the `sceneconductor-setup` skill; it provisions submodules → Blender → all five conda envs → all checkpoints → a PASS/FAIL verification, so you go from a bare clone to a runnable pipeline in one step:
+
+```bash
+git clone --recurse-submodules https://github.com/jhkim0759/SceneConductor.git SceneConductor
+cd SceneConductor
+claude
+```
+```text
+/sceneconductor-setup        # inside Claude Code — provisions AND validates everything
+```
+
+> SAM 3D Objects is a **gated** Hugging Face repo. If its download fails, request access at
+> https://huggingface.co/facebook/sam-3d-objects, create a token, and re-run with `HF_TOKEN=hf_xxx`.
+
+---
+
+Prefer to drive it manually? Copy‑paste this. It assumes Linux x86_64, an NVIDIA GPU (CUDA 11.8+), and `conda`/`miniconda` already installed. Each step is explained in the sections below.
 
 ```bash
 # 1. Clone (with submodules) and enter the repo
-git clone --recurse-submodules <repo-url> SceneConductor
+git clone --recurse-submodules https://github.com/jhkim0759/SceneConductor.git SceneConductor
 cd SceneConductor
 export PROJECT_ROOT="$PWD"
 
@@ -127,12 +143,12 @@ cp /path/to/photo.png "$PROJECT_ROOT/scenes/my_room/image.png"
 
 ## 3. Cloning with Submodules
 
-The external model code lives under `$PROJECT_ROOT/submodules/`. Three of these are **real git submodules**; one (GALP) is **vendored** (committed as plain files).
+The external model code lives under `$PROJECT_ROOT/submodules/`. All four are **real git submodules** — populate them with `--recurse-submodules` (or `git submodule update --init --recursive`).
 
 ### 3.1 Clone with submodules
 
 ```bash
-git clone --recurse-submodules <repo-url> SceneConductor
+git clone --recurse-submodules https://github.com/jhkim0759/SceneConductor.git SceneConductor
 cd SceneConductor
 ```
 
@@ -149,9 +165,9 @@ git submodule update --init --recursive
 | `submodules/Grounded-SAM` | git submodule | https://github.com/IDEA-Research/Grounded-Segment-Anything.git |
 | `submodules/SAM3D` | git submodule | https://github.com/facebookresearch/sam-3d-objects.git |
 | `submodules/Qwen3.6` | git submodule | https://github.com/QwenLM/Qwen3.6.git |
-| `submodules/GALP` | **vendored (not a submodule)** | — (no `.gitmodules` entry; already present after a plain clone) |
+| `submodules/GALP` | git submodule | https://github.com/jhkim0759/GALP.git |
 
-> **Note:** `submodules/GALP` is committed directly into the repo. `git submodule update` does nothing for it — it is always populated after a plain `git clone`. The three git submodules appear as empty placeholder folders until you run `git submodule update --init --recursive`.
+> **Note:** all four are listed in `.gitmodules`. After a plain `git clone` (without `--recurse-submodules`) the submodule folders are empty placeholders until you run `git submodule update --init --recursive`.
 
 ---
 
@@ -179,7 +195,7 @@ That single command:
 
 - creates **all five** conda envs with the exact, known‑good library versions each stage needs (PyTorch CUDA builds, PyTorch3D, GroundingDINO/SAM CUDA extensions, SAM3D, transformers, …);
 - **skips** any env that already exists (so it's safe to re‑run);
-- runs the post‑steps automatically — the GALP runtime `bundle.sh` and the `Grounded-Segment-Anything` symlink;
+- runs the post‑steps automatically — the GroundingDINO `.cu` torch-compat patch, the `groundingdino._C` build check, and the `Grounded-Segment-Anything` symlink;
 - prints a per‑env **summary** at the end.
 
 Expect **~30–60 min** the first time, mostly compiling CUDA extensions (PyTorch3D, flash‑attn, GroundingDINO).
@@ -284,9 +300,10 @@ checkpoints/galp/
 └── pipeline.yaml                    # pipeline config
 ```
 
-The vendored `submodules/GALP/checkpoints/` is a symlink to
-`$PROJECT_ROOT/checkpoints/galp/`, so once the download completes the GALP repo
-resolves its weights automatically. `run_galp.py` expects exactly this layout.
+`run_galp.py` reads these weights directly from `$PROJECT_ROOT/checkpoints/galp/`
+(via the `checkpoints_galp` key in `DIRECTORYS.yaml`), so once the download
+completes they resolve automatically — no symlink into `submodules/GALP/` is
+required.
 
 ### 5.3 SAM 3D Objects (official source)
 
@@ -368,5 +385,5 @@ Blender resolution order: `$BLENDER` env var → `blender_bin_<os>` for the curr
 5. **No space on `/home` while creating envs** — point conda at a bigger disk: `SC_ENVS_DIR=/path/to/large/disk/sc_envs ./setup.sh`.
 6. **`ModuleNotFoundError: GroundingDINO` (Stage 1)** — ensure `submodules/Grounded-SAM` is initialized and the `Grounded-Segment-Anything` path resolves into it; `pip install yapf` in the `grounded-sam` env. (`./setup.sh` creates the symlink and installs `yapf` automatically.)
 7. **CUDA OOM during Stage 1 SAM3D** — the post-process peaks at ~30 GiB. Close other GPU processes or pin a larger device with `--gpu N`.
-8. **Submodule directory empty after clone** — you cloned without `--recurse-submodules`. Run `git submodule update --init --recursive`. `submodules/GALP` is vendored and is populated regardless.
+8. **Submodule directory empty after clone** — you cloned without `--recurse-submodules`. Run `git submodule update --init --recursive` (this populates all four, GALP included).
 9. **"Stage skipped — already complete"** — all stages are resumable and cache completion. Re-run with `--force` to rebuild from Stage 1.

@@ -294,13 +294,40 @@ setup_grounded_sam() {
         # CUDA extension builds need these flags + a real nvcc on CUDA_HOME.
         export AM_I_DOCKER=False
         export BUILD_WITH_CUDA=True
+
+        # Patch GroundingDINO's CUDA source for modern PyTorch (>=2.x) BEFORE the
+        # build. Upstream uses C++ frontend APIs removed in recent libtorch:
+        #   Tensor.type().is_cuda()                  -> Tensor.is_cuda()
+        #   AT_DISPATCH_FLOATING_TYPES(x.type(), ..) -> x.scalar_type()
+        # Against the pinned torch 2.9.1 the `_C` extension otherwise fails to
+        # compile, and Stage 1 dies with `NameError: _C is not defined`.
+        # The sed is idempotent (safe to re-run / on already-patched trees).
+        GDINO_CU="$GSAM_REPO/GroundingDINO/groundingdino/models/GroundingDINO/csrc/MsDeformAttn/ms_deform_attn_cuda.cu"
+        if [ -f "$GDINO_CU" ]; then
+            sed -i -E 's/\.type\(\)\.is_cuda\(\)/.is_cuda()/g; s/AT_DISPATCH_FLOATING_TYPES\(([A-Za-z_]+)\.type\(\),/AT_DISPATCH_FLOATING_TYPES(\1.scalar_type(),/g' "$GDINO_CU"
+            echo "[INFO][$env] patched GroundingDINO ms_deform_attn_cuda.cu for torch>=2.x"
+        else
+            echo "[WARN][$env] GroundingDINO .cu not found at $GDINO_CU — skipping torch-compat patch"
+        fi
+
         echo "[INFO][$env] building CUDA extensions with CUDA_HOME=$CUDA_HOME"
         python -m pip install -e "$GSAM_REPO/segment_anything"
         pip install --no-build-isolation -e "$GSAM_REPO/GroundingDINO" \
-            || echo "[ERROR][$env] GroundingDINO CUDA build failed — check CUDA_HOME/nvcc"
+            || echo "[ERROR][$env] GroundingDINO editable install failed — check CUDA_HOME/nvcc"
+
+        # Verify the CUDA extension actually imports. Do NOT silently leave a
+        # broken env behind (this is the #1 Stage 1 failure mode).
+        if python -c "from groundingdino import _C" 2>/dev/null; then
+            echo "[INFO][$env] groundingdino._C import OK"
+            RESULTS["$env"]="OK"
+        else
+            echo "[ERROR][$env] groundingdino._C did NOT build/import — Stage 1 GroundedSAM WILL fail."
+            echo "              Ensure CUDA_HOME ($CUDA_HOME) has nvcc + a compatible gcc, then re-run:"
+            echo "              ./setup.sh --grounded-sam --force"
+            RESULTS["$env"]="FAILED (_C build)"
+        fi
 
         conda deactivate
-        RESULTS["$env"]="OK"
     else
         RESULTS["$env"]="skipped"
     fi
