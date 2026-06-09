@@ -1030,3 +1030,31 @@
 [stage1_pre]     then: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
 [stage1_eval]     Next: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
 [stage1_post] === [run_stage1] PHASE post complete — scene initialized ===
+----- snapshot #151 19:08:29 -----
+[2026-06-09 15:07:17] ====================================================================
+[2026-06-09 15:07:17] build_one_scene_seq finished (OK)
+[2026-06-09 15:07:17] ====================================================================
+[stage1_pre]     then: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
+[stage1_eval]     Next: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
+[stage1_post] === [run_stage1] PHASE post complete — scene initialized ===
+----- snapshot #152 19:10:30 -----
+[2026-06-09 15:07:17] ====================================================================
+[2026-06-09 15:07:17] build_one_scene_seq finished (OK)
+[2026-06-09 15:07:17] ====================================================================
+[stage1_pre]     then: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
+[stage1_eval]     Next: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
+[stage1_post] === [run_stage1] PHASE post complete — scene initialized ===
+----- snapshot #153 19:12:30 -----
+[2026-06-09 15:07:17] ====================================================================
+[2026-06-09 15:07:17] build_one_scene_seq finished (OK)
+[2026-06-09 15:07:17] ====================================================================
+[stage1_pre]     then: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
+[stage1_eval]     Next: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
+[stage1_post] === [run_stage1] PHASE post complete — scene initialized ===
+----- snapshot #154 19:14:30 -----
+[2026-06-09 15:07:17] ====================================================================
+[2026-06-09 15:07:17] build_one_scene_seq finished (OK)
+[2026-06-09 15:07:17] ====================================================================
+[stage1_pre]     then: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
+[stage1_eval]     Next: run_stage1.sh --scene_dir /home/kimj0010/3dscene/SceneConductor/tmp/release-check/SceneConductor/scenes/bedroom_b1 --phase post --gpu 2
+[stage1_post] === [run_stage1] PHASE post complete — scene initialized ===

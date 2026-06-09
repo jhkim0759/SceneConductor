@@ -30,6 +30,12 @@ The pipeline runs in three stages, shown above.
 - **(b) Stage 2 — Environment Construction.** An Opus vision director designs a rectilinear floor plan. It builds a separable Floor/Wall/Ceiling stage. A look-dev pass matches the photo. Finally it renders 5 reference views.
 - **(c) Stage 3 — Scene Refinement.** A relation graph drives a heuristic + Opus planner pass (attach-to-floor/wall, align, remove). An Opus validator flags problem groups. A dedicated island-refiner agent fixes each group. Then it renders the final 5 views.
 
+## 🗺️ Roadmap
+
+- [x] Code release
+- [x] Checkpoint release
+- [ ] Codex version — an OpenAI Codex / `codex-cli` compatible variant of the pipeline
+
 ## 🚀 Quickstart
 
 > **🧭 Where do I type each command?** Two kinds appear in this README:
@@ -55,55 +61,11 @@ Under the hood it patches the GroundingDINO CUDA source for the pinned PyTorch (
 
 ### 💻 Step 1 (manual alternative) — set everything up in the Terminal
 
-Prefer the one-skill setup above. These are the equivalent manual steps if you'd rather drive it yourself.
-
-```bash
-# 1. Clone with submodules
-git clone --recursive https://github.com/jhkim0759/SceneConductor.git SceneConductor
-cd SceneConductor
-```
-
-```bash
-# If you forgot --recursive, fetch the submodules now
-git submodule update --init --recursive
-```
-
-```bash
-# 2. Download Blender 4.2.1 (Linux x86_64) and verify it
-wget https://download.blender.org/release/Blender4.2/blender-4.2.1-linux-x64.tar.xz
-tar -xf blender-4.2.1-linux-x64.tar.xz
-./blender-4.2.1-linux-x64/blender --version
-```
-
-```bash
-# 3. Create all five conda envs with one command (~30-60 min; builds CUDA extensions)
-./setup.sh
-```
-
-```bash
-# 4. Download model checkpoints (~25 GB) into ./checkpoints/  (see 📦 Model Checkpoints)
-```
-
-```bash
-# 5. Stage a scene. A scene is a folder whose only file is image.png
-mkdir -p <scene_dir>
-cp /path/to/photo.png <scene_dir>/image.png
-```
-
-```bash
-# 6. Launch Claude Code from the repo root
-claude
-```
+Prefer the one-skill setup above. If you'd rather provision each piece yourself — clone + submodules, Blender, Claude Code, the five conda envs, and the model checkpoints — follow **[INSTALLATION.md](./INSTALLATION.md)**, then come back to Step 2.
 
 ### 💬 Step 2 — Run the pipeline (Claude Code prompt)
 
-You are now inside the `claude` session. Run all three stages with one command:
-
-```text
-/scene-orchestration <scene_dir>
-```
-
-Or run each stage yourself, in order:
+You are now inside the `claude` session. The **recommended** way is to run the three stages explicitly, in order — this gives you a checkpoint after each stage:
 
 ```text
 /stage1-initialize-scene <scene_dir>
@@ -115,7 +77,21 @@ Or run each stage yourself, in order:
 /stage3-scene-refinement <scene_dir>
 ```
 
-✨ **That's the whole flow.** `./setup.sh` builds every conda env. The rest is a single slash command.
+Or, to run all three back-to-back with one command:
+
+```text
+/scene-orchestration <scene_dir>
+```
+
+✨ **That's the whole flow.** `./setup.sh` builds every conda env. The rest is a few slash commands.
+
+**💻 Batch / non-interactive** — drive all three stages from the Terminal without opening the prompt:
+
+```bash
+SCENE_DIR=/path/to/scene FORCE=1 bash scripts/build_one_scene_seq.sh
+```
+
+🔁 Every stage is resumable. Re-running a stage skips work whose outputs already exist; `FORCE=1` overrides.
 
 > 🍎 On macOS/Windows, install Blender 4.2 by hand. Then set `blender_bin_macos` / `blender_bin_windows` in `DIRECTORYS.yaml`.
 
@@ -127,70 +103,6 @@ Or run each stage yourself, in order:
 - 💬 **Claude Code CLI** — the pipeline runs on slash commands. Install it from https://github.com/anthropics/claude-code.
 - 🐍 **conda / miniconda** — `./setup.sh` builds the five envs. Each is invoked via `conda run -n <name>`.
 - 🚫 **Git LFS** is not required.
-
-## 🐍 Environment Setup
-
-You don't build the envs by hand. **💻 `./setup.sh` creates all five.** It pins the exact library versions each stage needs, reads the names from `DIRECTORYS.yaml`, skips envs that already exist, and prints a summary.
-
-```bash
-# Create all five envs (skips any that already exist)
-./setup.sh
-```
-```bash
-# Delete and rebuild everything
-./setup.sh --all --force
-```
-```bash
-# Build only specific envs
-./setup.sh --scenegen --qwen-vl
-```
-```bash
-# See all options
-./setup.sh --help
-```
-
-| Env name | 🐍 Py | Purpose |
-|---|---|---|
-| `sceneconductor` | 3.11 | Driver + Blender orchestration (pyyaml, numpy, pillow, trimesh, scipy, opencv, shapely…) |
-| `scenegen` | 3.10 | GALP layout prediction (torch cu128 + pytorch3d + TRELLIS deps) |
-| `grounded-sam` | 3.10 | GroundedSAM inference (GroundingDINO + Segment-Anything CUDA build) |
-| `sam3d-objects` | 3.11 | SAM3D textured GLB extraction (official recipe) |
-| `qwen-vl` | 3.11 | Qwen3.5-VL attribute extractor (transformers ≥5.5) |
-
-> 💾 The `qwen-vl` env alone is ~10 GB. To put the envs on a larger disk than `/home`, prefix the command. `setup.sh` handles the rest:
-> ```bash
-> SC_ENVS_DIR=/path/to/large/disk/sceneconductor_envs ./setup.sh
-> ```
-> 🔧 CUDA source builds (`scenegen`, `grounded-sam`) use `CUDA_HOME` (default `/usr/local/cuda`).
-
-📖 Full per-env breakdown and manual fallback: **[Installation → Conda Environments](./INSTALLATION.md#4-conda-environments--one-command-setupsh)**.
-
-## 📦 Model Checkpoints
-
-Checkpoints are not committed (~25 GB total). The GALP weights live on Hugging Face at [`WopperSet/SceneConductor`](https://huggingface.co/WopperSet/SceneConductor). GroundedSAM, SAM 3D Objects, and Qwen3.5-VL come from their official sources. See **[Installation → Model Checkpoints](./INSTALLATION.md#5-model-checkpoints)** for the target layout and per-model download commands.
-
-**💻 Terminal** — batch a scene without the interactive prompt:
-
-```bash
-SCENE_DIR=/path/to/scene FORCE=1 bash build_one_scene_seq.sh
-```
-
-🔁 Every stage is resumable. Re-running a stage skips work whose outputs already exist. Use `--force` to override.
-
-## 🧪 Tests
-
-The Stage 1 pipeline has a pytest suite under `tests/stage1/`.
-
-**💻 Terminal**
-
-```bash
-# Run the suite
-conda run -n sceneconductor python -m pytest tests/stage1 -v
-```
-```bash
-# Or, with the sceneconductor env already active
-pytest tests/stage1
-```
 
 ## 📁 Repository Layout
 
@@ -207,7 +119,6 @@ SceneConductor/
 │   ├── SAM3D/                     # git submodule
 │   └── Qwen3.6/                   # git submodule
 ├── scripts/                       # batch runners (build_all_scenes.sh, etc.)
-├── tests/                         # stage1 pytest
 ├── setup.sh                       # one-shot conda env provisioner (all 5 envs)
 ├── DIRECTORYS.yaml                # machine-specific paths
 ├── INSTALLATION.md                # full install guide
@@ -232,21 +143,6 @@ SceneConductor/
 ```
 
 `inputs/relation_graph.json` is produced by Stage 3's auto pre-step (`stage3-sub-scene-analyze-prepare`), not by Stage 1.
-
-## 🛠️ Troubleshooting
-
-1. **🔍 "Blender not found"** — check that the `blender_bin_*` key in `DIRECTORYS.yaml` matches your platform. Or run `export BLENDER=/path/to/blender` to override it.
-2. **🐍 "Conda env not found"** — re-run 💻 `./setup.sh`. It builds any missing env and skips existing ones. Names must exactly match `conda_envs:` in `DIRECTORYS.yaml`. A mismatch is the most common Stage 1 failure.
-3. **🧱 An env failed to build in `./setup.sh`** — the summary marks it. Rebuild just that one, e.g. 💻 `./setup.sh --grounded-sam --force`. A CUDA build error usually means `CUDA_HOME` isn't pointing at a real toolkit.
-4. **💥 CUDA OOM during Stage 1 SAM3D** — the SAM3D post-process peaks at ~30 GiB. Close other GPU processes, pin a larger device with `--gpu N`, or use a higher-VRAM card.
-5. **⏭️ "Stage skipped — already complete"** — the orchestrator caches per-stage completion. Re-run with `--force` to rebuild from Stage 1.
-6. **📂 Submodule directory empty after clone** — you cloned without `--recursive`. Run 💻 `git submodule update --init --recursive` (this populates all four submodules, GALP included).
-
-## 🗺️ Roadmap
-
-- [x] Code release
-- [x] Checkpoint release
-- [ ] Codex version — an OpenAI Codex / `codex-cli` compatible variant of the pipeline
 
 ## 😊 Acknowledgements
 
