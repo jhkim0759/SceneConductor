@@ -1,4 +1,4 @@
-<h1 align="center">SceneConductor: 3D Scene Generation from Single Image with Multi-Agent Orchestration</h1>
+<h1 align="center">SceneConductor: 3D Scene Generation from a Single Image with Multi-Agent Orchestration</h1>
 
 <h4 align="center">
 
