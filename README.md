@@ -143,7 +143,7 @@ If you find our work helpful, please consider citing:
 
 ```bibtex
 @misc{kim2026sceneconductor3dscenegeneration,
-      title={SceneConductor: 3D Scene Generation from Single Image with Multi-Agent Orchestration},
+      title={SceneConductor: 3D Scene Generation from a Single Image with Multi-Agent Orchestration},
       author={Jeonghwan Kim and Yushi Lan and Yongwei Chen and Hieu Trung Nguyen and Chuanyu Pan and Xingang Pan},
       year={2026},
       eprint={2606.08402},
